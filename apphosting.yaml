@@ -1,0 +1,23 @@
+# Firebase App Hosting Configuration
+# This configures the backend deployment to Cloud Run
+
+# Root directory for the application (where package.json is located)
+rootDirectory: website
+
+# Settings for Backend (on Cloud Run)
+runConfig:
+  minInstances: 0
+  maxInstances: 10
+  cpu: 1
+  memoryMiB: 512
+  concurrency: 80
+
+# Environment variables
+env:
+  # These will be available at build time and runtime
+  - variable: NODE_ENV
+    value: production
+    availability:
+      - BUILD
+      - RUNTIME
+
