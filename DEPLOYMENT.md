@@ -61,3 +61,9 @@ If you **need server-side features**, switch to App Hosting:
 
 Your **Firebase Hosting** deployment should be working fine!
 
+---
+
+## ✅ Status: App Hosting Backend Deleted
+
+CI/CD is now fully operational with Firebase Hosting only!
+
