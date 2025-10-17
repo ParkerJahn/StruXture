@@ -7,32 +7,32 @@ const Particles = dynamic(() => import('@/components/Particles'), {
   loading: () => <div className="h-screen w-screen bg-black" />
 });
 
-const FloatingGlobe = dynamic(() => import('@/components/FloatingGlobe'), {
-  ssr: false,
-  loading: () => null
-});
-
 export default function Scene() {
   return (
     <>
-      {/* Particles Background - Client Side Only */}
-      <Particles
-        particleColors={['#ffffff', '#ffffff']}
-        particleCount={800}
-        particleSpread={10}
-        speed={0.1}
-        particleBaseSize={100}
-        alphaParticles={false}
-        disableRotation={false}
-      />
-
-      {/* Floating Globe - Centered - Client Side Only */}
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none">
-        <FloatingGlobe 
-          size={800}
-          rotationSpeed={15}
-          gridColor="#00ffff"
-          glowColor="#00ffff"
+      {/* Particles Background - Fixed Position - Client Side Only */}
+      <div 
+        className="fixed inset-0 w-screen h-screen z-0 pointer-events-none"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          overflow: 'hidden',
+          willChange: 'transform',
+          transform: 'translateZ(0)',
+          backfaceVisibility: 'hidden'
+        }}
+      >
+        <Particles
+          particleColors={['#ffffff', '#ffffff']}
+          particleCount={800}
+          particleSpread={10}
+          speed={0.05}
+          particleBaseSize={120}
+          alphaParticles={false}
+          disableRotation={false}
         />
       </div>
     </>
