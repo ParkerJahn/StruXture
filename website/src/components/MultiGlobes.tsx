@@ -86,9 +86,18 @@ const globePositions: GlobePosition[] = [
 export default function MultiGlobes() {
   const [mounted, setMounted] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    
+    // Detect mobile screen size
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
 
     const handleScroll = () => {
       const viewportHeight = window.innerHeight;
@@ -107,7 +116,10 @@ export default function MultiGlobes() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // Initial call
     
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', checkMobile);
+    };
   }, []);
 
   if (!mounted) return null;
@@ -119,6 +131,9 @@ export default function MultiGlobes() {
         const exitX = globe.exitDirection.x * scrollProgress;
         const exitY = globe.exitDirection.y * scrollProgress;
         const opacity = 1 - scrollProgress;
+        
+        // Scale down globe size for mobile (40% on mobile, 100% on desktop)
+        const scaledSize = isMobile ? globe.size * 0.4 : globe.size;
         
         return (
           <div
@@ -133,7 +148,7 @@ export default function MultiGlobes() {
             }}
           >
             <FloatingGlobe
-              size={globe.size}
+              size={scaledSize}
               rotationSpeed={globe.rotationSpeed}
               gridColor={globe.gridColor}
               glowColor={globe.glowColor}

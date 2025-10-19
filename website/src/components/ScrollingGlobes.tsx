@@ -36,14 +36,26 @@ export default function ScrollingGlobes({
   pauseMovement = 1,
 }: ScrollingGlobesProps) {
   const [scrollY, setScrollY] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Detect mobile screen size
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
     const handleScroll = () => {
       setScrollY(window.scrollY);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', checkMobile);
+    };
   }, []);
 
   // Easing function that slows down in the middle and pauses at center
@@ -128,6 +140,9 @@ export default function ScrollingGlobes({
           opacity = 0;
         }
 
+        // Scale down globe size for mobile (50% on mobile, 100% on desktop)
+        const scaledSize = isMobile ? globe.size * 0.5 : globe.size;
+        
         return (
           <div
             key={index}
@@ -139,21 +154,21 @@ export default function ScrollingGlobes({
             }}
           >
             <FloatingGlobe
-              size={globe.size}
+              size={scaledSize}
               rotationSpeed={globe.rotationSpeed}
               gridColor={globe.gridColor}
               glowColor={globe.glowColor}
             />
             
             {/* Text that moves with the globe */}
-            <div className="mt-8 text-center pointer-events-auto">
+            <div className="mt-4 md:mt-8 text-center pointer-events-auto px-4">
               <h2 
-                className="text-5xl font-bold mb-4"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4"
                 style={{ color: globe.gridColor }}
               >
                 {globe.title}
               </h2>
-              <p className="text-xl opacity-80 text-white">
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl opacity-80 text-white">
                 {globe.subtitle}
               </p>
             </div>

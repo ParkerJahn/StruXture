@@ -70,20 +70,20 @@ export default function Home() {
       {/* Content sections to enable scrolling */}
       <div className="relative z-30 pointer-events-auto">
         {/* Intro Section */}
-        <section className="h-[100vh] flex items-top mt-40 justify-center">
-          <div className="text-center text-white">
+        <section className="h-[100vh] flex items-top mt-20 md:mt-40 justify-center px-4">
+          <div className="text-center text-white max-w-4xl">
             <TextType
               text="Welcome to StruXture"
               as="h1"
-              className="text-7xl font-bold mb-6"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-6"
               typingSpeed={75}
               showCursor={true}
               cursorCharacter="|"
               loop={false}
               initialDelay={500}
             />
-            <p className="text-2xl opacity-80 mb-8">Where innovation meets design</p>
-            <p className="text-lg opacity-60">Scroll to explore</p>
+            <p className="text-lg sm:text-xl md:text-2xl opacity-80 mb-4 md:mb-8">Where innovation meets design</p>
+            <p className="text-sm sm:text-base md:text-lg opacity-60">Scroll to explore</p>
           </div>
         </section>
 
@@ -95,10 +95,10 @@ export default function Home() {
         </section>
 
         {/* Transition section */}
-        <section className="h-[100vh] flex items-center justify-center">
-          <div className="text-center text-white">
-            <h2 className="text-5xl font-bold mb-4">Experience the Journey</h2>
-            <p className="text-xl opacity-80">Smooth scrolling globe transitions</p>
+        <section className="h-[100vh] flex items-center justify-center px-4">
+          <div className="text-center text-white max-w-4xl">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 md:mb-4">Experience the Journey</h2>
+            <p className="text-base sm:text-lg md:text-xl opacity-80">Smooth scrolling globe transitions</p>
           </div>
         </section>
 

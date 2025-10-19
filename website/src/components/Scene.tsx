@@ -1,5 +1,6 @@
 'use client';
 import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
 
 // Lazy load client components for optimal loading speed
 const Particles = dynamic(() => import('@/components/Particles'), {
@@ -8,6 +9,19 @@ const Particles = dynamic(() => import('@/components/Particles'), {
 });
 
 export default function Scene() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
     <>
       {/* Particles Background - Fixed Position - Client Side Only */}
@@ -27,10 +41,10 @@ export default function Scene() {
       >
         <Particles
           particleColors={['#ffffff', '#ffffff']}
-          particleCount={800}
+          particleCount={isMobile ? 300 : 800}
           particleSpread={10}
           speed={0.05}
-          particleBaseSize={120}
+          particleBaseSize={isMobile ? 80 : 120}
           alphaParticles={false}
           disableRotation={false}
         />
