@@ -13,6 +13,7 @@ export interface GlobeConfig {
   rotationSpeed: number;
   gridColor: string;
   glowColor: string;
+  texturePath?: string;
   name: string;
   title: string;
   subtitle: string;
@@ -47,12 +48,25 @@ export default function ScrollingGlobes({
     checkMobile();
     window.addEventListener('resize', checkMobile);
 
+    let rafId: number | null = null;
+    let latestScrollY = window.scrollY;
+
     const handleScroll = () => {
-      setScrollY(window.scrollY);
+      latestScrollY = window.scrollY;
+      
+      if (rafId === null) {
+        rafId = requestAnimationFrame(() => {
+          setScrollY(latestScrollY);
+          rafId = null;
+        });
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', checkMobile);
     };
@@ -107,36 +121,29 @@ export default function ScrollingGlobes({
         let opacity = 0;
         
         if (rawGlobeProgress < 0) {
-          // Globe is waiting to enter from the right
-          translateX = 150; // Start off-screen right (percentage)
-          scale = 0.3;
+          // Globe is waiting to enter from the right - completely hidden
+          translateX = 100;
+          scale = 1;
           opacity = 0;
         } else if (rawGlobeProgress <= 1) {
           // Globe is transitioning across the screen
-          // 0 to 1: move from right to left, scale from small to large to small
-          translateX = 150 - (globeProgress * 300); // 150 to -150
+          translateX = 100 - (globeProgress * 200); // 100 to -100
           
-          // Scale: peaks at 1.0 when globeProgress = 0.5 (centered)
-          if (globeProgress <= 0.5) {
-            // Entering: scale from 0.3 to 1.0
-            scale = 0.3 + (globeProgress * 1.4);
-          } else {
-            // Exiting: scale from 1.0 to 0.3
-            scale = 1.7 - (globeProgress * 1.4);
-          }
+          // Keep scale constant at 1.0 - no scaling animation
+          scale = 1;
           
-          // Opacity: fade in and out
-          if (globeProgress <= 0.2) {
-            opacity = globeProgress * 5; // 0 to 1
-          } else if (globeProgress >= 0.8) {
-            opacity = (1 - globeProgress) * 5; // 1 to 0
+          // Opacity: very quick fade in/out at edges, invisible outside viewport
+          if (globeProgress <= 0.05) {
+            opacity = globeProgress / 0.05; // 0 to 1 over first 5%
+          } else if (globeProgress >= 0.95) {
+            opacity = (1 - globeProgress) / 0.05; // 1 to 0 over last 5%
           } else {
             opacity = 1;
           }
         } else {
-          // Globe has exited to the left
-          translateX = -150;
-          scale = 0.3;
+          // Globe has exited to the left - completely hidden
+          translateX = -100;
+          scale = 1;
           opacity = 0;
         }
 
@@ -146,29 +153,33 @@ export default function ScrollingGlobes({
         return (
           <div
             key={index}
-            className="absolute flex flex-col items-center"
+            className="absolute flex items-center justify-center"
             style={{
-              transform: `translateX(${translateX}vw) scale(${scale})`,
+              transform: `translate3d(${translateX}vw, 0, 0) scale(${scale})`,
               opacity: opacity,
-              transition: 'transform 0.1s linear, opacity 0.1s linear',
+              visibility: opacity === 0 ? 'hidden' : 'visible',
+              willChange: 'transform, opacity',
+              backfaceVisibility: 'hidden' as const,
             }}
           >
+            {/* Globe */}
             <FloatingGlobe
               size={scaledSize}
               rotationSpeed={globe.rotationSpeed}
               gridColor={globe.gridColor}
               glowColor={globe.glowColor}
+              texturePath={globe.texturePath}
             />
             
-            {/* Text that moves with the globe */}
-            <div className="mt-4 md:mt-8 text-center pointer-events-auto px-4">
+            {/* Text overlaid on top of globe */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-auto px-4">
               <h2 
-                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4 drop-shadow-lg"
                 style={{ color: globe.gridColor }}
               >
                 {globe.title}
               </h2>
-              <p className="text-sm sm:text-base md:text-lg lg:text-xl opacity-80 text-white">
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl opacity-90 text-white drop-shadow-lg">
                 {globe.subtitle}
               </p>
             </div>

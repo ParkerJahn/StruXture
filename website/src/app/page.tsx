@@ -15,40 +15,44 @@ const MultiGlobes = dynamic(() => import("@/components/MultiGlobes"), {
 // Original slow scrolling globes
 const originalGlobes: GlobeConfig[] = [
   {
-    size: 500,
-    rotationSpeed: 12,
-    gridColor: "#00ffff",
-    glowColor: "#00ffff",
+    size: 1000,
+    rotationSpeed: 23,
+    gridColor: "#ffffff",
+    glowColor: "#ffffff",
+    texturePath: "/2k_earth_daymap.jpg",
     name: "Cyan",
-    title: "Original Slow Cyan",
-    subtitle: "Classic slow transition with pause"
+    title: "SaaS Products",
+    subtitle: "Click to learn more about our SaaS products"
   },
   {
-    size: 500,
+    size: 1200,
     rotationSpeed: 18,
-    gridColor: "#ff00ff",
-    glowColor: "#ff00ff",
+    gridColor: "#ffffff",
+    glowColor: "#ffffff",
+    texturePath: "/2k_jupiter.jpg",
     name: "Purple",
-    title: "Original Slow Purple",
-    subtitle: "Smooth and deliberate movement"
+    title: "Business Intelligence",
+    subtitle: "Learn how StruXture can help your business make data-driven decisions."
   },
   {
-    size: 500,
+    size: 900,
     rotationSpeed: 10,
-    gridColor: "#00ff88",
-    glowColor: "#00ff88",
+    gridColor: "#ffffff",
+    glowColor: "#ffffff",
+    texturePath: "/2k_mars.jpg",
     name: "Green",
-    title: "Original Slow Green",
-    subtitle: "One globe at a time, centered"
+    title: "Business inquiries",
+    subtitle: "Click to contact us for more information about how to get started with a FREE consultation."
   },
   {
-    size: 500,
+    size: 900,
     rotationSpeed: 20,
-    gridColor: "#ff8800",
-    glowColor: "#ff8800",
+    gridColor: "#ffffff",
+    glowColor: "#ffffff",
+    texturePath: "/2k_mercury.jpg",
     name: "Orange",
-    title: "Original Slow Orange",
-    subtitle: "Final globe in the original sequence"
+    title: "Interested in joining our team?",
+    subtitle: "We're always looking for talented individuals to join our team."
   }
 ];
 

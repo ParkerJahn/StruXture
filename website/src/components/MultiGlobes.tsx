@@ -12,6 +12,7 @@ interface GlobePosition {
   rotationSpeed: number;
   gridColor: string;
   glowColor: string;
+  texturePath: string;
   initialX: number; // percentage
   initialY: number; // percentage
   moveX: number; // movement range in percentage
@@ -22,10 +23,11 @@ interface GlobePosition {
 
 const globePositions: GlobePosition[] = [
   {
-    size: 400,
+    size: 500,
     rotationSpeed: 12,
-    gridColor: "#00ffff",
-    glowColor: "#00ffff",
+    gridColor: "#ffffff",
+    glowColor: "#ffffff",
+    texturePath: "/2k_earth_daymap.jpg", // Earth
     initialX: 15,
     initialY: 20,
     moveX: 1,
@@ -36,8 +38,9 @@ const globePositions: GlobePosition[] = [
   {
     size: 350,
     rotationSpeed: 18,
-    gridColor: "#ff00ff",
-    glowColor: "#ff00ff",
+    gridColor: "#ffffff",
+    glowColor: "#ffffff",
+    texturePath: "/2k_jupiter.jpg", // Jupiter
     initialX: 75,
     initialY: 30,
     moveX: -1,
@@ -48,8 +51,9 @@ const globePositions: GlobePosition[] = [
   {
     size: 450,
     rotationSpeed: 10,
-    gridColor: "#00ff88",
-    glowColor: "#00ff88",
+    gridColor: "#ffffff",
+    glowColor: "#ffffff",
+    texturePath: "/2k_mars.jpg", // Mars
     initialX: 50,
     initialY: 70,
     moveX: 1,
@@ -60,8 +64,9 @@ const globePositions: GlobePosition[] = [
   {
     size: 380,
     rotationSpeed: 20,
-    gridColor: "#ff8800",
-    glowColor: "#ff8800",
+    gridColor: "#ffffff",
+    glowColor: "#ffffff",
+    texturePath: "/2k_mercury.jpg", // Mercury
     initialX: 25,
     initialY: 75,
     moveX: -1,
@@ -72,8 +77,9 @@ const globePositions: GlobePosition[] = [
   {
     size: 420,
     rotationSpeed: 15,
-    gridColor: "#ff0066",
-    glowColor: "#ff0066",
+    gridColor: "#ffffff",
+    glowColor: "#ffffff",
+    texturePath: "/2k_earth_clouds.jpg", // Earth with clouds
     initialX: 80,
     initialY: 70,
     moveX: 1,
@@ -152,6 +158,7 @@ export default function MultiGlobes() {
               rotationSpeed={globe.rotationSpeed}
               gridColor={globe.gridColor}
               glowColor={globe.glowColor}
+              texturePath={globe.texturePath}
             />
           </div>
         );
