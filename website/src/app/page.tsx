@@ -2,6 +2,7 @@
 import "./globals.css";
 import Scene from "@/components/Scene";
 import ScrollingGlobes, { GlobeConfig } from "@/components/ScrollingGlobes";
+import Header from "@/components/Header";
 import dynamic from "next/dynamic";
 
 const TextType = dynamic(() => import("@/components/TextType"), {
@@ -59,6 +60,7 @@ const originalGlobes: GlobeConfig[] = [
 export default function Home() {
   return (
     <div className="min-h-[1400vh] w-screen bg-black relative overflow-x-hidden">
+      <Header />
       <Scene />
       
       {/* Original slow scrolling globes - start after multi-globe section */}
@@ -72,22 +74,27 @@ export default function Home() {
       />
       
       {/* Content sections to enable scrolling */}
-      <div className="relative z-30 pointer-events-auto">
+      <div className="relative z-50 pointer-events-auto">
         {/* Intro Section */}
-        <section className="h-[100vh] flex items-top mt-20 md:mt-40 justify-center px-4">
-          <div className="text-center text-white max-w-4xl">
+        <section className="h-[100vh] flex items-center justify-center px-4 sm:px-6 md:px-8 bg-gradient-to-b from-neutral-800/80 via-neutral-900/70 to-black/30 relative z-50">
+          <div className="text-center text-white max-w-4xl relative z-50 w-full">
             <TextType
               text="Welcome to StruXture"
               as="h1"
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-6"
-              typingSpeed={75}
+              className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-6 px-2"
+              style={{
+                fontFamily: '"natom-pro", sans-serif',
+                fontWeight: 700,
+                fontStyle: 'normal'
+              }}
+              typingSpeed={50}
               showCursor={true}
               cursorCharacter="|"
               loop={false}
               initialDelay={500}
             />
-            <p className="text-lg sm:text-xl md:text-2xl opacity-80 mb-4 md:mb-8">Where innovation meets design</p>
-            <p className="text-sm sm:text-base md:text-lg opacity-60">Scroll to explore</p>
+            <p className="text-base xs:text-lg sm:text-xl md:text-2xl opacity-80 mb-4 md:mb-8 px-2">Where innovation meets design</p>
+            <p className="text-xs xs:text-sm sm:text-base md:text-lg opacity-60 px-2">Scroll to explore</p>
           </div>
         </section>
 
@@ -99,10 +106,10 @@ export default function Home() {
         </section>
 
         {/* Transition section */}
-        <section className="h-[100vh] flex items-center justify-center px-4">
-          <div className="text-center text-white max-w-4xl">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 md:mb-4">Experience the Journey</h2>
-            <p className="text-base sm:text-lg md:text-xl opacity-80">Smooth scrolling globe transitions</p>
+        <section className="h-[100vh] flex items-center justify-center px-4 sm:px-6 md:px-8">
+          <div className="text-center text-white max-w-4xl w-full">
+            <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold mb-3 md:mb-4 px-2">Experience the Journey</h2>
+            <p className="text-sm xs:text-base sm:text-lg md:text-xl opacity-80 px-2">Smooth scrolling globe transitions</p>
           </div>
         </section>
 

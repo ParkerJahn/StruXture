@@ -172,14 +172,14 @@ export default function ScrollingGlobes({
             />
             
             {/* Text overlaid on top of globe */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-auto px-4">
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-auto px-4 sm:px-6 md:px-8">
               <h2 
-                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4 drop-shadow-lg"
+                className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4 drop-shadow-lg max-w-full"
                 style={{ color: globe.gridColor }}
               >
                 {globe.title}
               </h2>
-              <p className="text-sm sm:text-base md:text-lg lg:text-xl opacity-90 text-white drop-shadow-lg">
+              <p className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl opacity-90 text-white drop-shadow-lg max-w-full">
                 {globe.subtitle}
               </p>
             </div>
