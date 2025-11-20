@@ -273,10 +273,10 @@ export default function Team() {
                 fontWeight: 700
               }}
             >
-              Don't See Your Role?
+              Don&apos;t See Your Role?
             </h2>
             <p className="text-base xs:text-lg sm:text-xl text-white/70 mb-6 sm:mb-8">
-              We're always looking for talented individuals. Send us your resume!
+              We&apos;re always looking for talented individuals. Send us your resume!
             </p>
             <button
               className="py-4 px-8 sm:px-12 rounded-xl font-semibold text-base sm:text-lg bg-white text-black hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-white/20"

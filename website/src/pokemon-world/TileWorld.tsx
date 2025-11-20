@@ -162,7 +162,13 @@ const TileWorld = () => {
       case TILE_TYPES.TREE:
         return (
           <div className={`${baseClasses} bg-[#6B8F6B]`}>
-            <div className="w-full h-full flex items-center justify-center text-xl sm:text-2xl md:text-3xl">🌲</div>
+            <div className="w-full h-full flex items-center justify-center text-xl sm:text-2xl md:text-3xl"
+            style={{
+              backgroundColor: '#182c25',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+            >🌲</div>
           </div>
         );
       
