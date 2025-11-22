@@ -11,10 +11,12 @@ interface Position {
 }
 
 const TileWorld = () => {
-  const [playerPos, setPlayerPos] = useState<Position>({ x: 9, y: 8 });
+  const [playerPos, setPlayerPos] = useState<Position>({ x: 9, y: 1 });
   const [isMoving, setIsMoving] = useState(false);
   const [direction, setDirection] = useState<'up' | 'down' | 'left' | 'right'>('down');
   const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
+  const [showGrid, setShowGrid] = useState(false);
+  const [hoveredTile, setHoveredTile] = useState<{ x: number; y: number } | null>(null);
 
   // Check if a tile is walkable
   const isWalkable = useCallback((x: number, y: number): boolean => {
@@ -31,12 +33,12 @@ const TileWorld = () => {
   const handleTileInteraction = useCallback((x: number, y: number) => {
     const tile = MAP[y][x];
     if (tile === TILE_TYPES.DOOR) {
-      console.log('🚪 Entered building!');
-      alert('🏠 Welcome to our Product Showcase!\n\nThis house represents one of our products.');
+      console.log('Entered building!');
+      alert('Welcome to our Product Showcase!\n\nThis house represents one of our products.');
     } else if (tile === TILE_TYPES.SIGN) {
-      alert('📋 "Explore different houses to discover our amazing products!"');
+      alert('"Explore different houses to discover our amazing products!"');
     } else if (tile === TILE_TYPES.NPC) {
-      alert('👋 NPC: "Hello! Check out the houses around town to learn about our products!"');
+      alert('NPC: "Hello! Check out the houses around town to learn about our products!"');
     }
   }, []);
 
@@ -48,6 +50,11 @@ const TileWorld = () => {
     const newX = playerPos.x + dx;
     const newY = playerPos.y + dy;
 
+    // Debug logging
+    console.log(`Trying to move from (${playerPos.x}, ${playerPos.y}) to (${newX}, ${newY})`);
+    console.log(`Tile at destination: ${MAP[newY]?.[newX] ?? 'out of bounds'}`);
+    console.log(`Is walkable: ${isWalkable(newX, newY)}`);
+
     if (isWalkable(newX, newY)) {
       setIsMoving(true);
       setPlayerPos({ x: newX, y: newY });
@@ -55,12 +62,21 @@ const TileWorld = () => {
       handleTileInteraction(newX, newY);
       
       setTimeout(() => setIsMoving(false), 200);
+    } else {
+      console.log(`Blocked! Cannot move to (${newX}, ${newY})`);
     }
   }, [playerPos, isMoving, isWalkable, handleTileInteraction]);
 
   // Keyboard controls
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Toggle grid with 'G' key
+      if (e.key === 'g' || e.key === 'G') {
+        e.preventDefault();
+        setShowGrid(prev => !prev);
+        return;
+      }
+
       switch (e.key) {
         case 'ArrowUp':
         case 'w':
@@ -130,120 +146,6 @@ const TileWorld = () => {
     setTouchStart(null);
   };
 
-  // Render tile based on type
-  const renderTile = (tile: number) => {
-    const baseClasses = "absolute w-full h-full";
-    
-    switch (tile) {
-      case TILE_TYPES.GRASS:
-        return (
-          <div className={`${baseClasses} bg-[#4CAF50]`}>
-            <div className="w-full h-full" style={{
-              backgroundColor: '#4CAF50',
-              backgroundImage: `radial-gradient(circle at 25% 25%, #66BB6A 2px, transparent 2px),
-                               radial-gradient(circle at 75% 75%, #388E3C 2px, transparent 2px)`,
-              backgroundSize: '16px 16px',
-              backgroundPosition: '0 0, 8px 8px'
-            }} />
-          </div>
-        );
-      
-      case TILE_TYPES.PATH:
-        return (
-          <div className={`${baseClasses} bg-[#D2B48C]`}>
-            <div className="w-full h-full" style={{
-              backgroundColor: '#D2B48C',
-              backgroundImage: `radial-gradient(circle, #C19A6B 1px, transparent 1px)`,
-              backgroundSize: '8px 8px'
-            }} />
-          </div>
-        );
-      
-      case TILE_TYPES.TREE:
-        return (
-          <div className={`${baseClasses} bg-[#6B8F6B]`}>
-            <div className="w-full h-full flex items-center justify-center text-xl sm:text-2xl md:text-3xl"
-            style={{
-              backgroundColor: '#182c25',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-            >🌲</div>
-          </div>
-        );
-      
-      case TILE_TYPES.WATER:
-        return (
-          <div className={`${baseClasses} bg-gradient-to-br from-[#4A90E2] to-[#5BA3F5]`}>
-            <div className="w-full h-full animate-pulse" style={{
-              backgroundImage: `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3) 2px, transparent 2px)`,
-              backgroundSize: '20px 20px'
-            }} />
-          </div>
-        );
-      
-      case TILE_TYPES.FLOWER:
-        return (
-          <div className={`${baseClasses} bg-[#4CAF50]`}>
-            <div className="w-full h-full flex items-center justify-center text-lg sm:text-xl md:text-2xl" style={{ backgroundColor: '#4CAF50' }}>🌸</div>
-          </div>
-        );
-      
-      case TILE_TYPES.TALL_GRASS:
-        return (
-          <div className={`${baseClasses} bg-[#388E3C]`}>
-            <div className="w-full h-full flex items-center justify-center text-base sm:text-lg md:text-xl opacity-70" style={{ backgroundColor: '#388E3C' }}>🌾</div>
-          </div>
-        );
-      
-      case TILE_TYPES.FENCE:
-        return (
-          <div className={`${baseClasses} bg-[#8B6F47] flex items-center justify-center`}>
-            <div className="w-full h-full border-2 border-[#5C4A2F]" style={{
-              backgroundImage: 'repeating-linear-gradient(90deg, #6B5437 0px, #6B5437 8px, transparent 8px, transparent 16px)',
-            }} />
-          </div>
-        );
-      
-      case TILE_TYPES.DOOR:
-        return (
-          <div className={`${baseClasses} bg-[#4CAF50]`}>
-            <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: '#4CAF50' }}>
-              <div className="text-xl sm:text-2xl md:text-3xl animate-bounce">🚪</div>
-            </div>
-          </div>
-        );
-      
-      case TILE_TYPES.SIGN:
-        return (
-          <div className={`${baseClasses} bg-[#4CAF50]`}>
-            <div className="w-full h-full flex items-center justify-center text-xl sm:text-2xl md:text-3xl" style={{ backgroundColor: '#4CAF50' }}>🪧</div>
-          </div>
-        );
-      
-      case TILE_TYPES.NPC:
-        return (
-          <div className={`${baseClasses} bg-[#4CAF50]`}>
-            <div className="w-full h-full flex items-center justify-center text-xl sm:text-2xl md:text-3xl" style={{ backgroundColor: '#4CAF50' }}>🧑</div>
-          </div>
-        );
-      
-      default:
-        return <div className={`${baseClasses} bg-gray-300`} />;
-    }
-  };
-
-  // Get player sprite based on direction
-  const getPlayerSprite = () => {
-    const sprites = {
-      up: '🚶',
-      down: '🚶',
-      left: '🚶',
-      right: '🚶'
-    };
-    return sprites[direction];
-  };
-
   return (
     <div className="min-h-screen w-screen bg-white relative overflow-x-hidden">
       <Header />
@@ -276,17 +178,24 @@ const TileWorld = () => {
             <span className="sm:hidden">Swipe to move • </span>
             Walk into houses to discover products
           </p>
+          {showGrid && (
+            <div className="mt-1 px-3 py-1 bg-yellow-100 border border-yellow-400 rounded text-xs text-yellow-900 font-mono inline-block">
+              DEBUG MODE: Grid coordinates visible
+            </div>
+          )}
         </div>
 
         {/* CRT TV Frame Container */}
-        <div className="relative w-full max-w-[2000px] mx-auto flex-1 flex items-center justify-center overflow-visible px-2 sm:px-4 md:px-0" style={{ maxHeight: 'calc(100vh - 180px)' }}>
+        <div className="relative w-full mx-auto flex-1 flex items-center justify-center overflow-visible px-2 sm:px-4 md:px-0" style={{ maxHeight: 'calc(100vh - 180px)' }}>
           {/* Game World Inside CRT Screen - Must render BEFORE frame for proper z-index layering */}
           <div 
-            className="relative w-full overflow-hidden" 
+            className="relative overflow-hidden mx-auto" 
             style={{ 
-              aspectRatio: '4/3', 
+              aspectRatio: '4/3',
+              width: '100%',
+              maxWidth: '800px',
+              height: 'auto',
               maxHeight: '100%',
-              maxWidth: '100%'
             }}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
@@ -306,50 +215,104 @@ const TileWorld = () => {
               <div className="absolute inset-0 bg-black overflow-hidden" style={{ borderRadius: '3px', clipPath: 'inset(0)' }}>
                 {/* Game Content */}
                 <div className="relative w-full h-full overflow-hidden">
+                  {/* Map Background Image */}
                   <div 
-                    className="absolute overflow-hidden"
+                    className="absolute inset-0"
                     style={{
-                      top: 0,
-                      left: 0,
+                      backgroundImage: 'url(/Map.gif)',
+                      backgroundSize: '100% 100%',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat',
+                      imageRendering: 'pixelated',
                       width: '100%',
                       height: '100%',
-                      display: 'grid',
-                      gridTemplateColumns: `repeat(${MAP[0].length}, 1fr)`,
-                      gridTemplateRows: `repeat(${MAP.length}, 1fr)`,
-                      imageRendering: 'pixelated',
-                      alignItems: 'stretch',
-                      justifyItems: 'stretch',
-                      gap: 0
                     }}
-                  >
-                    {MAP.map((row, y) => (
-                      row.map((tile, x) => (
-                        <div
-                          key={`${x}-${y}`}
-                          className="relative w-full h-full"
-                          style={{ minWidth: 0, minHeight: 0 }}
-                        >
-                          {renderTile(tile)}
-                        </div>
-                      ))
-                    ))}
-                  </div>
+                  />
+
+
+                  {/* Debug Grid Overlay (Press 'G' to toggle) */}
+                  {showGrid && (
+                    <div 
+                      className="absolute inset-0 z-40 pointer-events-none"
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: `repeat(${MAP[0].length}, 1fr)`,
+                        gridTemplateRows: `repeat(${MAP.length}, 1fr)`,
+                      }}
+                    >
+                      {MAP.map((row, y) => (
+                        row.map((tile, x) => (
+                          <div
+                            key={`grid-${x}-${y}`}
+                            className="relative w-full h-full flex items-center justify-center border border-yellow-300/80 hover:border-yellow-400 transition-colors pointer-events-auto cursor-crosshair"
+                            onMouseEnter={() => setHoveredTile({ x, y })}
+                            onMouseLeave={() => setHoveredTile(null)}
+                            style={{
+                              borderWidth: '1px',
+                              backgroundColor: 'transparent',
+                            }}
+                          >
+                            {/* Show tile type number */}
+                            <div className="text-yellow-300 font-mono text-sm sm:text-base md:text-lg font-black pointer-events-none">
+                              {tile}
+                            </div>
+                          </div>
+                        ))
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Player Position Display (always visible when grid is on) */}
+                  {showGrid && (
+                    <div 
+                      className="absolute top-2 left-2 bg-black/90 text-white px-3 py-2 rounded-lg text-xs sm:text-sm font-mono z-50 border-2 border-green-400"
+                      style={{
+                        textShadow: '0 0 2px black',
+                      }}
+                    >
+                      <div className="font-bold text-green-300">PLAYER POSITION</div>
+                      <div>X: {playerPos.x} / Y: {playerPos.y}</div>
+                      <div>Tile Type: {MAP[playerPos.y][playerPos.x]}</div>
+                      <div className="text-[10px] text-gray-300 mt-1">
+                        {BLOCKED_TILES.includes(MAP[playerPos.y][playerPos.x]) ? 'Blocked' : 'Walkable'}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Hovered Tile Info Display */}
+                  {showGrid && hoveredTile && (
+                    <div 
+                      className="absolute top-2 left-32 bg-black/80 text-white px-3 py-2 rounded-lg text-xs sm:text-sm font-mono z-50 border-2 border-yellow-400"
+                      style={{
+                        textShadow: '0 0 2px black',
+                      }}
+                    >
+                      <div className="font-bold text-yellow-300">HOVERED TILE</div>
+                      <div>X: {hoveredTile.x} / Y: {hoveredTile.y}</div>
+                      <div>Tile Type: {MAP[hoveredTile.y][hoveredTile.x]}</div>
+                      <div className="text-[10px] text-gray-300 mt-1">
+                        {BLOCKED_TILES.includes(MAP[hoveredTile.y][hoveredTile.x]) ? 'Blocked' : 'Walkable'}
+                      </div>
+                    </div>
+                  )}
 
                   {/* Player Character */}
-                  <div
-                    className="absolute z-50 flex items-center justify-center transition-all duration-200 ease-linear player-sprite pointer-events-none"
+                  <Image
+                    src="/character.png"
+                    alt="Player Character"
+                    width={64}
+                    height={96}
+                    className="absolute z-50 transition-all duration-200 ease-linear pointer-events-none drop-shadow-lg"
                     style={{
-                      left: `${(playerPos.x / MAP[0].length) * 100}%`,
-                      top: `${(playerPos.y / MAP.length) * 100}%`,
-                      width: `${(1 / MAP[0].length) * 100}%`,
-                      height: `${(1 / MAP.length) * 100}%`,
-                      transform: direction === 'left' ? 'scaleX(-1)' : 'scaleX(1)',
+                      left: `${((playerPos.x + 0.5) / MAP[0].length) * 100}%`,
+                      top: `${((playerPos.y + 0.5) / MAP.length) * 100 * 1.35}%`,
+                      imageRendering: 'pixelated',
+                      transform: direction === 'left' 
+                        ? 'translate(-50%, -50%) scaleX(-0.5) scaleY(0.5)' 
+                        : 'translate(-50%, -50%) scale(0.5)',
                     }}
-                  >
-                    <div className="text-base xs:text-lg sm:text-xl md:text-2xl filter drop-shadow-lg">
-                      {getPlayerSprite()}
-                    </div>
-                  </div>
+                    priority
+                  />
                 </div>
               </div>
             </div>
@@ -372,19 +335,15 @@ const TileWorld = () => {
           {/* Desktop Controls */}
           <div className="hidden sm:grid grid-cols-4 gap-2 text-gray-800 text-xs" style={{ fontFamily: 'monospace' }}>
             <div className="flex items-center justify-center gap-1 bg-purple-100 border border-purple-300 px-2 py-1.5 rounded">
-              <span className="text-sm">⬆️</span>
               <span>W/↑</span>
             </div>
             <div className="flex items-center justify-center gap-1 bg-purple-100 border border-purple-300 px-2 py-1.5 rounded">
-              <span className="text-sm">⬇️</span>
               <span>S/↓</span>
             </div>
             <div className="flex items-center justify-center gap-1 bg-purple-100 border border-purple-300 px-2 py-1.5 rounded">
-              <span className="text-sm">⬅️</span>
               <span>A/←</span>
             </div>
             <div className="flex items-center justify-center gap-1 bg-purple-100 border border-purple-300 px-2 py-1.5 rounded">
-              <span className="text-sm">➡️</span>
               <span>D/→</span>
             </div>
           </div>
@@ -392,13 +351,32 @@ const TileWorld = () => {
           {/* Mobile Touch Instructions */}
           <div className="sm:hidden text-center text-gray-800 text-xs" style={{ fontFamily: 'monospace' }}>
             <div className="bg-purple-100 border border-purple-300 px-3 py-2 rounded">
-              <span className="text-sm">👆 Swipe on the CRT screen to move</span>
+              <span className="text-sm">Swipe on the CRT screen to move</span>
             </div>
           </div>
           
           <p className="text-center mt-2 text-gray-600 text-xs">
-            🏠 Products • 🪧 Info • 🧑 Guides
+            Products • Info • Guides
           </p>
+          
+          {/* Grid Toggle Indicator */}
+          <div className="mt-2 pt-2 border-t border-gray-300 text-center">
+            <button
+              onClick={() => setShowGrid(prev => !prev)}
+              className={`px-3 py-1.5 rounded text-xs font-mono transition-all ${
+                showGrid 
+                  ? 'bg-yellow-400 text-black border-2 border-yellow-600 shadow-lg' 
+                  : 'bg-gray-300 text-gray-700 border border-gray-400'
+              }`}
+            >
+              {showGrid ? 'Grid: ON' : 'Grid: OFF'} (Press G)
+            </button>
+            {showGrid && (
+              <p className="text-[10px] text-gray-500 mt-1">
+                Hover over tiles to see coordinates
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </div>
