@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { MAP, TILE_TYPES, BLOCKED_TILES } from './mapData';
+import { useRouter } from 'next/navigation';
+import { MAP, TILE_TYPES, BLOCKED_TILES, DOOR_ACTIONS } from './mapData';
 import Header from '@/components/Header';
 import Image from 'next/image';
 
@@ -11,10 +12,10 @@ interface Position {
 }
 
 const TileWorld = () => {
+  const router = useRouter();
   const [playerPos, setPlayerPos] = useState<Position>({ x: 9, y: 1 });
   const [isMoving, setIsMoving] = useState(false);
   const [direction, setDirection] = useState<'up' | 'down' | 'left' | 'right'>('down');
-  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
   const [showGrid, setShowGrid] = useState(false);
   const [hoveredTile, setHoveredTile] = useState<{ x: number; y: number } | null>(null);
 
@@ -33,14 +34,25 @@ const TileWorld = () => {
   const handleTileInteraction = useCallback((x: number, y: number) => {
     const tile = MAP[y][x];
     if (tile === TILE_TYPES.DOOR) {
-      console.log('Entered building!');
-      alert('Welcome to our Product Showcase!\n\nThis house represents one of our products.');
+      // Create a position key to look up the specific door
+      const doorKey = `${x},${y}`;
+      const doorData = DOOR_ACTIONS[doorKey as keyof typeof DOOR_ACTIONS];
+      
+      if (doorData) {
+        console.log(`Entering ${doorData.name}...`);
+        // Navigate to the page
+        router.push(doorData.url);
+      } else {
+        // Default message if door position isn't mapped
+        console.log('Entered building!');
+        alert('Welcome to our Product Showcase!\n\nThis house represents one of our products.');
+      }
     } else if (tile === TILE_TYPES.SIGN) {
       alert('"Explore different houses to discover our amazing products!"');
     } else if (tile === TILE_TYPES.NPC) {
       alert('NPC: "Hello! Check out the houses around town to learn about our products!"');
     }
-  }, []);
+  }, [router]);
 
   // Handle player movement
   const movePlayer = useCallback((dx: number, dy: number, dir: 'up' | 'down' | 'left' | 'right') => {
@@ -109,45 +121,30 @@ const TileWorld = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [movePlayer]);
 
-  // Touch controls for mobile
-  const handleTouchStart = (e: React.TouchEvent) => {
-    const touch = e.touches[0];
-    setTouchStart({ x: touch.clientX, y: touch.clientY });
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (!touchStart) return;
-
-    const touch = e.changedTouches[0];
-    const deltaX = touch.clientX - touchStart.x;
-    const deltaY = touch.clientY - touchStart.y;
-    const minSwipeDistance = 30;
-
-    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-      // Horizontal swipe
-      if (Math.abs(deltaX) > minSwipeDistance) {
-        if (deltaX > 0) {
-          movePlayer(1, 0, 'right');
-        } else {
-          movePlayer(-1, 0, 'left');
-        }
-      }
-    } else {
-      // Vertical swipe
-      if (Math.abs(deltaY) > minSwipeDistance) {
-        if (deltaY > 0) {
-          movePlayer(0, 1, 'down');
-        } else {
-          movePlayer(0, -1, 'up');
-        }
-      }
-    }
-
-    setTouchStart(null);
-  };
-
   return (
-    <div className="min-h-screen w-screen bg-white relative overflow-x-hidden">
+    <div className="min-h-screen w-screen relative overflow-x-hidden">
+      {/* Clean Bright Background */}
+      <div className="fixed inset-0 z-0">
+        {/* Animated Gradient */}
+        <div 
+          className="absolute inset-0 animate-gradient"
+          style={{
+            background: 'linear-gradient(135deg, #667eea 0%, #50C876 25%, #50C878 50%, #4facfe 75%, #00f2fe 100%)',
+            backgroundSize: '400% 400%',
+          }}
+        />
+        
+        {/* Subtle Pattern Overlay */}
+        <div 
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: `
+              repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.1) 35px, rgba(255,255,255,.1) 70px)
+            `,
+          }}
+        />
+      </div>
+
       <Header />
       
       <style jsx>{`
@@ -155,27 +152,44 @@ const TileWorld = () => {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-4px); }
         }
+        
+        @keyframes gradient {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+        
+        .animate-gradient {
+          animation: gradient 15s ease infinite;
+        }
+        
         .player-sprite {
           animation: float 1s ease-in-out infinite;
         }
       `}</style>
 
-      <div className="relative z-50 flex flex-col items-center justify-start h-screen pt-14 sm:pt-16 px-4 pb-3 overflow-hidden">
+      <div className="relative z-50 flex flex-col items-center justify-start min-h-screen pt-14 sm:pt-16 px-4 pb-6 overflow-x-hidden">
         {/* Title Section */}
         <div className="mb-2 sm:mb-3 text-center">
           <h1 
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-black mb-1 sm:mb-2"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-1 sm:mb-2"
             style={{
               fontFamily: '"natom-pro", sans-serif',
               fontWeight: 700,
-              textShadow: '2px 2px 4px rgba(0,0,0,0.1)'
+              textShadow: '2px 2px 4px rgba(255,255,255,0.1)'
             }}
           >
             EXPLORE OUR PRODUCTS
           </h1>
-          <p className="text-gray-700 text-xs sm:text-sm" style={{ fontFamily: 'monospace' }}>
-            <span className="hidden sm:inline">Use arrow keys or WASD to move • </span>
-            <span className="sm:hidden">Swipe to move • </span>
+          <p className="text-gray-300 text-xs sm:text-sm" style={{ fontFamily: 'monospace' }}>
+            <span className="hidden md:inline">Use arrow keys or WASD to move • </span>
+            <span className="md:hidden">Use arrow buttons below to move • </span>
             Walk into houses to discover products
           </p>
           {showGrid && (
@@ -197,8 +211,6 @@ const TileWorld = () => {
               height: 'auto',
               maxHeight: '100%',
             }}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
           >
             <div 
               className="absolute overflow-hidden"
@@ -306,10 +318,12 @@ const TileWorld = () => {
                     style={{
                       left: `${((playerPos.x + 0.5) / MAP[0].length) * 100}%`,
                       top: `${((playerPos.y + 0.5) / MAP.length) * 100 * 1.35}%`,
+                      width: '3.5vmin',
+                      height: 'auto',
                       imageRendering: 'pixelated',
                       transform: direction === 'left' 
-                        ? 'translate(-50%, -50%) scaleX(-0.5) scaleY(0.5)' 
-                        : 'translate(-50%, -50%) scale(0.5)',
+                        ? 'translate(-50%, -50%) scaleX(-1)' 
+                        : 'translate(-50%, -50%)',
                     }}
                     priority
                   />
@@ -330,28 +344,89 @@ const TileWorld = () => {
           </div>
         </div>
 
+        {/* Arrow Controls - Mobile Only */}
+        <div className="md:hidden mb-2 flex flex-col items-center gap-2 py-2">
+          {/* Up Button */}
+          <button
+            onClick={() => movePlayer(0, -1, 'up')}
+            className="w-20 h-20 bg-gradient-to-b from-blue-500 to-blue-700 rounded-2xl shadow-xl border-4 border-white flex items-center justify-center text-white text-5xl font-black active:scale-95 transition-all touch-none"
+            aria-label="Move Up"
+            style={{ 
+              WebkitTapHighlightColor: 'transparent',
+              boxShadow: '0 6px 16px rgba(0,0,0,0.4)'
+            }}
+          >
+            ▲
+          </button>
+          
+          {/* Left and Right Buttons Row */}
+          <div className="flex gap-8">
+            <button
+              onClick={() => movePlayer(-1, 0, 'left')}
+              className="w-20 h-20 bg-gradient-to-b from-blue-500 to-blue-700 rounded-2xl shadow-xl border-4 border-white flex items-center justify-center text-white text-5xl font-black active:scale-95 transition-all touch-none"
+              aria-label="Move Left"
+              style={{ 
+                WebkitTapHighlightColor: 'transparent',
+                boxShadow: '0 6px 16px rgba(0,0,0,0.4)'
+              }}
+            >
+              ◀
+            </button>
+            
+            <button
+              onClick={() => movePlayer(1, 0, 'right')}
+              className="w-20 h-20 bg-gradient-to-b from-blue-500 to-blue-700 rounded-2xl shadow-xl border-4 border-white flex items-center justify-center text-white text-5xl font-black active:scale-95 transition-all touch-none"
+              aria-label="Move Right"
+              style={{ 
+                WebkitTapHighlightColor: 'transparent',
+                boxShadow: '0 6px 16px rgba(0,0,0,0.4)'
+              }}
+            >
+              ▶
+            </button>
+          </div>
+          
+          {/* Down Button */}
+          <button
+            onClick={() => movePlayer(0, 1, 'down')}
+            className="w-20 h-20 bg-gradient-to-b from-blue-500 to-blue-700 rounded-2xl shadow-xl border-4 border-white flex items-center justify-center text-white text-5xl font-black active:scale-95 transition-all touch-none"
+            aria-label="Move Down"
+            style={{ 
+              WebkitTapHighlightColor: 'transparent',
+              boxShadow: '0 6px 16px rgba(0,0,0,0.4)'
+            }}
+          >
+            ▼
+          </button>
+        </div>
+
         {/* Controls Info */}
         <div className="mt-2 sm:mt-3 bg-gradient-to-br from-gray-100 to-gray-200 p-2 sm:p-3 rounded-xl border border-gray-300 shadow-lg max-w-2xl mx-auto w-full">
-          {/* Desktop Controls */}
-          <div className="hidden sm:grid grid-cols-4 gap-2 text-gray-800 text-xs" style={{ fontFamily: 'monospace' }}>
-            <div className="flex items-center justify-center gap-1 bg-purple-100 border border-purple-300 px-2 py-1.5 rounded">
-              <span>W/↑</span>
-            </div>
-            <div className="flex items-center justify-center gap-1 bg-purple-100 border border-purple-300 px-2 py-1.5 rounded">
-              <span>S/↓</span>
-            </div>
-            <div className="flex items-center justify-center gap-1 bg-purple-100 border border-purple-300 px-2 py-1.5 rounded">
-              <span>A/←</span>
-            </div>
-            <div className="flex items-center justify-center gap-1 bg-purple-100 border border-purple-300 px-2 py-1.5 rounded">
-              <span>D/→</span>
+          {/* Keyboard Controls Info */}
+          <div className="hidden md:block text-center mb-2">
+            <p className="text-gray-700 text-sm font-semibold mb-1" style={{ fontFamily: 'monospace' }}>
+              Keyboard Controls
+            </p>
+            <div className="grid grid-cols-4 gap-2 text-gray-800 text-xs" style={{ fontFamily: 'monospace' }}>
+              <div className="flex items-center justify-center gap-1 bg-purple-100 border border-purple-300 px-2 py-1.5 rounded">
+                <span>W/↑</span>
+              </div>
+              <div className="flex items-center justify-center gap-1 bg-purple-100 border border-purple-300 px-2 py-1.5 rounded">
+                <span>S/↓</span>
+              </div>
+              <div className="flex items-center justify-center gap-1 bg-purple-100 border border-purple-300 px-2 py-1.5 rounded">
+                <span>A/←</span>
+              </div>
+              <div className="flex items-center justify-center gap-1 bg-purple-100 border border-purple-300 px-2 py-1.5 rounded">
+                <span>D/→</span>
+              </div>
             </div>
           </div>
           
-          {/* Mobile Touch Instructions */}
-          <div className="sm:hidden text-center text-gray-800 text-xs" style={{ fontFamily: 'monospace' }}>
+          {/* Mobile Instructions */}
+          <div className="md:hidden text-center text-gray-800 text-xs" style={{ fontFamily: 'monospace' }}>
             <div className="bg-purple-100 border border-purple-300 px-3 py-2 rounded">
-              <span className="text-sm">Swipe on the CRT screen to move</span>
+              <span className="text-sm">Use arrow buttons above to move around</span>
             </div>
           </div>
           
