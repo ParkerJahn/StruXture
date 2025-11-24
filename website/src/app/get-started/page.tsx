@@ -3,6 +3,15 @@ import { useState } from "react";
 import Header from "@/components/Header";
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { app } from '@/services/firebase';
+import {
+  sanitizeText,
+  sanitizeEmail,
+  sanitizePhone,
+  sanitizeTextWithLimit,
+  checkRateLimit,
+  formatErrorMessage,
+  INPUT_LIMITS,
+} from '@/utils/security';
 
 interface Step {
   number: number;
@@ -48,25 +57,43 @@ export default function GetStarted() {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string>('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError('');
 
     try {
+      // Check rate limit
+      const rateLimit = checkRateLimit();
+      if (!rateLimit.allowed) {
+        throw new Error(
+          `Too many submissions. Please try again after ${rateLimit.resetTime.toLocaleTimeString()}`
+        );
+      }
+
+      // Validate and sanitize all inputs
+      const sanitizedData = {
+        name: sanitizeTextWithLimit(formData.name, INPUT_LIMITS.NAME, 'Name'),
+        email: sanitizeEmail(formData.email),
+        company: sanitizeTextWithLimit(formData.company, INPUT_LIMITS.COMPANY, 'Company'),
+        phone: formData.phone ? sanitizePhone(formData.phone, false) : '',
+        service: sanitizeText(formData.service),
+        message: sanitizeTextWithLimit(formData.message, INPUT_LIMITS.MESSAGE, 'Message')
+      };
+
+      // Additional validation
+      if (!sanitizedData.service) {
+        throw new Error('Please select a service');
+      }
+
       // Get Firebase Functions
       const functions = getFunctions(app);
       const sendConsultation = httpsCallable(functions, 'sendConsultation');
 
-      // Send consultation request
-      await sendConsultation({
-        name: formData.name,
-        email: formData.email,
-        company: formData.company,
-        phone: formData.phone,
-        service: formData.service,
-        message: formData.message
-      });
+      // Send consultation request with sanitized data
+      await sendConsultation(sanitizedData);
 
       // Success!
       alert('Thank you! We will contact you soon.');
@@ -82,16 +109,26 @@ export default function GetStarted() {
       });
     } catch (error) {
       console.error('Error submitting consultation request:', error);
-      alert('There was an error submitting your request. Please try again or email us directly.');
+      const errorMessage = formatErrorMessage(error);
+      setError(errorMessage);
+      alert(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    
+    // Clear error when user starts typing
+    if (error) setError('');
+    
+    // Apply basic sanitization on change (remove null bytes, trim on blur)
+    const sanitizedValue = value.replace(/\0/g, '');
+    
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: sanitizedValue
     });
   };
 
@@ -198,10 +235,12 @@ export default function GetStarted() {
                     id="name"
                     name="name"
                     required
+                    maxLength={INPUT_LIMITS.NAME}
                     value={formData.name}
                     onChange={handleChange}
                     className="w-full px-4 py-3 sm:py-4 rounded-lg bg-black/50 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20 transition-all text-sm xs:text-base"
                     placeholder="John Doe"
+                    autoComplete="name"
                   />
                 </div>
 
@@ -214,10 +253,12 @@ export default function GetStarted() {
                     id="email"
                     name="email"
                     required
+                    maxLength={INPUT_LIMITS.EMAIL}
                     value={formData.email}
                     onChange={handleChange}
                     className="w-full px-4 py-3 sm:py-4 rounded-lg bg-black/50 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20 transition-all text-sm xs:text-base"
                     placeholder="john@company.com"
+                    autoComplete="email"
                   />
                 </div>
               </div>
@@ -232,10 +273,12 @@ export default function GetStarted() {
                     id="company"
                     name="company"
                     required
+                    maxLength={INPUT_LIMITS.COMPANY}
                     value={formData.company}
                     onChange={handleChange}
                     className="w-full px-4 py-3 sm:py-4 rounded-lg bg-black/50 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20 transition-all text-sm xs:text-base"
                     placeholder="Your Company"
+                    autoComplete="organization"
                   />
                 </div>
 
@@ -247,10 +290,12 @@ export default function GetStarted() {
                     type="tel"
                     id="phone"
                     name="phone"
+                    maxLength={INPUT_LIMITS.PHONE}
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full px-4 py-3 sm:py-4 rounded-lg bg-black/50 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20 transition-all text-sm xs:text-base"
                     placeholder="+1 (555) 123-4567"
+                    autoComplete="tel"
                   />
                 </div>
               </div>
@@ -279,13 +324,14 @@ export default function GetStarted() {
 
               <div>
                 <label htmlFor="message" className="block text-sm xs:text-base font-medium text-white mb-2">
-                  Tell us about your project *
+                  Tell us about your project * ({formData.message.length}/{INPUT_LIMITS.MESSAGE})
                 </label>
                 <textarea
                   id="message"
                   name="message"
                   required
                   rows={6}
+                  maxLength={INPUT_LIMITS.MESSAGE}
                   value={formData.message}
                   onChange={handleChange}
                   className="w-full px-4 py-3 sm:py-4 rounded-lg bg-black/50 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20 transition-all resize-none text-sm xs:text-base"

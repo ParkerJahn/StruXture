@@ -3,6 +3,17 @@ import { useState } from "react";
 import Header from "@/components/Header";
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { app } from '@/services/firebase';
+import {
+  sanitizeText,
+  sanitizeEmail,
+  sanitizePhone,
+  sanitizeURL,
+  sanitizeTextWithLimit,
+  checkRateLimit,
+  validateFileUpload,
+  formatErrorMessage,
+  INPUT_LIMITS,
+} from '@/utils/security';
 
 export default function Team() {
   const [formData, setFormData] = useState({
@@ -17,38 +28,82 @@ export default function Team() {
     resume: null as File | null
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string>('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Clear error when user starts typing
+    if (error) setError('');
+    
+    // Apply basic sanitization on change (remove null bytes)
+    const sanitizedValue = value.replace(/\0/g, '');
+    
+    setFormData(prev => ({ ...prev, [name]: sanitizedValue }));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFormData(prev => ({ ...prev, resume: e.target.files![0] }));
+      const file = e.target.files[0];
+      
+      // Validate file
+      const validation = validateFileUpload(file);
+      if (!validation.valid) {
+        setError(validation.error || 'Invalid file');
+        alert(validation.error);
+        e.target.value = ''; // Clear the file input
+        return;
+      }
+      
+      setFormData(prev => ({ ...prev, resume: file }));
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError('');
 
     try {
+      // Check rate limit
+      const rateLimit = checkRateLimit();
+      if (!rateLimit.allowed) {
+        throw new Error(
+          `Too many submissions. Please try again after ${rateLimit.resetTime.toLocaleTimeString()}`
+        );
+      }
+
+      // Validate file upload
+      if (formData.resume) {
+        const validation = validateFileUpload(formData.resume);
+        if (!validation.valid) {
+          throw new Error(validation.error);
+        }
+      }
+
+      // Validate and sanitize all inputs
+      const sanitizedData = {
+        fullName: sanitizeTextWithLimit(formData.fullName, INPUT_LIMITS.NAME, 'Full Name'),
+        email: sanitizeEmail(formData.email),
+        phone: formData.phone ? sanitizePhone(formData.phone, false) : '',
+        position: sanitizeText(formData.position),
+        experience: formData.experience ? sanitizeTextWithLimit(formData.experience, INPUT_LIMITS.EXPERIENCE, 'Experience') : '',
+        linkedin: formData.linkedin ? sanitizeURL(formData.linkedin, false) : '',
+        portfolio: formData.portfolio ? sanitizeURL(formData.portfolio, false) : '',
+        coverLetter: sanitizeTextWithLimit(formData.coverLetter, INPUT_LIMITS.COVER_LETTER, 'Cover Letter')
+      };
+
+      // Additional validation
+      if (!sanitizedData.position) {
+        throw new Error('Please select a position');
+      }
+
       // Get Firebase Functions
       const functions = getFunctions(app);
       const sendJobApplication = httpsCallable(functions, 'sendJobApplication');
 
-      // Send application data (note: file upload would need separate handling with Storage)
-      await sendJobApplication({
-        fullName: formData.fullName,
-        email: formData.email,
-        phone: formData.phone,
-        position: formData.position,
-        experience: formData.experience,
-        linkedin: formData.linkedin,
-        portfolio: formData.portfolio,
-        coverLetter: formData.coverLetter
-      });
+      // Send application data with sanitized data (note: file upload would need separate handling with Storage)
+      await sendJobApplication(sanitizedData);
 
       // Success!
       alert('Application submitted successfully! We will be in touch soon.');
@@ -65,9 +120,16 @@ export default function Team() {
         coverLetter: '',
         resume: null
       });
+      
+      // Reset file input
+      const fileInput = document.getElementById('resume') as HTMLInputElement;
+      if (fileInput) fileInput.value = '';
+      
     } catch (error) {
       console.error('Error submitting application:', error);
-      alert('There was an error submitting your application. Please try again or email us directly.');
+      const errorMessage = formatErrorMessage(error);
+      setError(errorMessage);
+      alert(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -148,10 +210,12 @@ export default function Team() {
                     id="fullName"
                     name="fullName"
                     required
+                    maxLength={INPUT_LIMITS.NAME}
                     value={formData.fullName}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-transparent transition-all"
                     placeholder="John Doe"
+                    autoComplete="name"
                   />
                 </div>
 
@@ -165,10 +229,12 @@ export default function Team() {
                     id="email"
                     name="email"
                     required
+                    maxLength={INPUT_LIMITS.EMAIL}
                     value={formData.email}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-transparent transition-all"
                     placeholder="john@example.com"
+                    autoComplete="email"
                   />
                 </div>
 
@@ -181,10 +247,12 @@ export default function Team() {
                     type="tel"
                     id="phone"
                     name="phone"
+                    maxLength={INPUT_LIMITS.PHONE}
                     value={formData.phone}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-transparent transition-all"
                     placeholder="+1 (555) 123-4567"
+                    autoComplete="tel"
                   />
                 </div>
 
@@ -219,6 +287,7 @@ export default function Team() {
                     type="text"
                     id="experience"
                     name="experience"
+                    maxLength={INPUT_LIMITS.EXPERIENCE}
                     value={formData.experience}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-transparent transition-all"
@@ -235,10 +304,12 @@ export default function Team() {
                     type="url"
                     id="linkedin"
                     name="linkedin"
+                    maxLength={INPUT_LIMITS.URL}
                     value={formData.linkedin}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-transparent transition-all"
                     placeholder="https://linkedin.com/in/yourprofile"
+                    autoComplete="url"
                   />
                 </div>
 
@@ -251,10 +322,12 @@ export default function Team() {
                     type="url"
                     id="portfolio"
                     name="portfolio"
+                    maxLength={INPUT_LIMITS.URL}
                     value={formData.portfolio}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-transparent transition-all"
                     placeholder="https://yourportfolio.com"
+                    autoComplete="url"
                   />
                 </div>
 
@@ -275,18 +348,24 @@ export default function Team() {
                   <p className="text-white/50 text-xs sm:text-sm mt-2">
                     Accepted formats: PDF, DOC, DOCX (Max 5MB)
                   </p>
+                  {formData.resume && (
+                    <p className="text-green-400 text-xs sm:text-sm mt-1">
+                      ✓ {formData.resume.name} ({(formData.resume.size / 1024).toFixed(1)} KB)
+                    </p>
+                  )}
                 </div>
 
                 {/* Cover Letter */}
                 <div>
                   <label htmlFor="coverLetter" className="block text-white text-sm sm:text-base font-semibold mb-2">
-                    Cover Letter / Why You? *
+                    Cover Letter / Why You? * ({formData.coverLetter.length}/{INPUT_LIMITS.COVER_LETTER})
                   </label>
                   <textarea
                     id="coverLetter"
                     name="coverLetter"
                     required
                     rows={6}
+                    maxLength={INPUT_LIMITS.COVER_LETTER}
                     value={formData.coverLetter}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-transparent transition-all resize-none"

@@ -1,5 +1,16 @@
 import * as functions from 'firebase-functions';
 import * as nodemailer from 'nodemailer';
+import {
+  validateEmail,
+  validateTextWithLimit,
+  validatePhone,
+  validateURL,
+  validateService,
+  validatePosition,
+  checkRateLimit,
+  getClientIdentifier,
+  INPUT_LIMITS,
+} from './security';
 
 // HTTP function for health check
 export const health = functions.https.onRequest((request, response) => {
@@ -35,12 +46,19 @@ export const helloWorld = functions.https.onCall((data, context) => {
 // Note: CORS is handled automatically by Firebase callable functions
 export const sendJobApplication = functions.https.onCall(async (data, context) => {
   try {
-    // Validate required fields
-    const { fullName, email, phone, position, experience, linkedin, portfolio, coverLetter } = data;
-    
-    if (!fullName || !email || !position || !coverLetter) {
-      throw new functions.https.HttpsError('invalid-argument', 'Missing required fields');
-    }
+    // Rate limiting check
+    const clientId = getClientIdentifier(context);
+    checkRateLimit(clientId);
+
+    // Validate and sanitize all inputs
+    const fullName = validateTextWithLimit(data.fullName, INPUT_LIMITS.NAME, 'Full Name', true);
+    const email = validateEmail(data.email);
+    const phone = validatePhone(data.phone, false);
+    const position = validatePosition(data.position);
+    const experience = validateTextWithLimit(data.experience, INPUT_LIMITS.EXPERIENCE, 'Experience', false);
+    const linkedin = validateURL(data.linkedin, 'LinkedIn', false);
+    const portfolio = validateURL(data.portfolio, 'Portfolio', false);
+    const coverLetter = validateTextWithLimit(data.coverLetter, INPUT_LIMITS.COVER_LETTER, 'Cover Letter', true);
 
     // Get email credentials from Firebase config or environment variables
     const emailUser = functions.config().email?.user || process.env.EMAIL_USER;
@@ -101,6 +119,9 @@ export const sendJobApplication = functions.https.onCall(async (data, context) =
     };
   } catch (error) {
     console.error('Error sending email:', error);
+    if (error instanceof functions.https.HttpsError) {
+      throw error;
+    }
     throw new functions.https.HttpsError('internal', 'Failed to send application. Please try again later.');
   }
 });
@@ -109,12 +130,17 @@ export const sendJobApplication = functions.https.onCall(async (data, context) =
 // Note: CORS is handled automatically by Firebase callable functions
 export const sendConsultation = functions.https.onCall(async (data, context) => {
   try {
-    // Validate required fields
-    const { name, email, company, phone, service, message } = data;
-    
-    if (!name || !email || !company || !service || !message) {
-      throw new functions.https.HttpsError('invalid-argument', 'Missing required fields');
-    }
+    // Rate limiting check
+    const clientId = getClientIdentifier(context);
+    checkRateLimit(clientId);
+
+    // Validate and sanitize all inputs
+    const name = validateTextWithLimit(data.name, INPUT_LIMITS.NAME, 'Name', true);
+    const email = validateEmail(data.email);
+    const company = validateTextWithLimit(data.company, INPUT_LIMITS.COMPANY, 'Company', true);
+    const phone = validatePhone(data.phone, false);
+    const service = validateService(data.service);
+    const message = validateTextWithLimit(data.message, INPUT_LIMITS.MESSAGE, 'Message', true);
 
     // Get email credentials from Firebase config or environment variables
     const emailUser = functions.config().email?.user || process.env.EMAIL_USER;
@@ -171,6 +197,9 @@ export const sendConsultation = functions.https.onCall(async (data, context) => 
     };
   } catch (error) {
     console.error('Error sending consultation email:', error);
+    if (error instanceof functions.https.HttpsError) {
+      throw error;
+    }
     throw new functions.https.HttpsError('internal', 'Failed to send consultation request. Please try again later.');
   }
 }); 

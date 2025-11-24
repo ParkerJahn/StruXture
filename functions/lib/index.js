@@ -26,6 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendConsultation = exports.sendJobApplication = exports.helloWorld = exports.api = exports.health = void 0;
 const functions = __importStar(require("firebase-functions"));
 const nodemailer = __importStar(require("nodemailer"));
+const security_1 = require("./security");
 // HTTP function for health check
 exports.health = functions.https.onRequest((request, response) => {
     response.json({
@@ -58,11 +59,18 @@ exports.helloWorld = functions.https.onCall((data, context) => {
 exports.sendJobApplication = functions.https.onCall(async (data, context) => {
     var _a, _b, _c, _d;
     try {
-        // Validate required fields
-        const { fullName, email, phone, position, experience, linkedin, portfolio, coverLetter } = data;
-        if (!fullName || !email || !position || !coverLetter) {
-            throw new functions.https.HttpsError('invalid-argument', 'Missing required fields');
-        }
+        // Rate limiting check
+        const clientId = (0, security_1.getClientIdentifier)(context);
+        (0, security_1.checkRateLimit)(clientId);
+        // Validate and sanitize all inputs
+        const fullName = (0, security_1.validateTextWithLimit)(data.fullName, security_1.INPUT_LIMITS.NAME, 'Full Name', true);
+        const email = (0, security_1.validateEmail)(data.email);
+        const phone = (0, security_1.validatePhone)(data.phone, false);
+        const position = (0, security_1.validatePosition)(data.position);
+        const experience = (0, security_1.validateTextWithLimit)(data.experience, security_1.INPUT_LIMITS.EXPERIENCE, 'Experience', false);
+        const linkedin = (0, security_1.validateURL)(data.linkedin, 'LinkedIn', false);
+        const portfolio = (0, security_1.validateURL)(data.portfolio, 'Portfolio', false);
+        const coverLetter = (0, security_1.validateTextWithLimit)(data.coverLetter, security_1.INPUT_LIMITS.COVER_LETTER, 'Cover Letter', true);
         // Get email credentials from Firebase config or environment variables
         const emailUser = ((_a = functions.config().email) === null || _a === void 0 ? void 0 : _a.user) || process.env.EMAIL_USER;
         const emailPass = ((_b = functions.config().email) === null || _b === void 0 ? void 0 : _b.pass) || ((_c = functions.config().email) === null || _c === void 0 ? void 0 : _c.password) || process.env.EMAIL_PASS;
@@ -119,6 +127,9 @@ exports.sendJobApplication = functions.https.onCall(async (data, context) => {
     }
     catch (error) {
         console.error('Error sending email:', error);
+        if (error instanceof functions.https.HttpsError) {
+            throw error;
+        }
         throw new functions.https.HttpsError('internal', 'Failed to send application. Please try again later.');
     }
 });
@@ -127,11 +138,16 @@ exports.sendJobApplication = functions.https.onCall(async (data, context) => {
 exports.sendConsultation = functions.https.onCall(async (data, context) => {
     var _a, _b, _c, _d;
     try {
-        // Validate required fields
-        const { name, email, company, phone, service, message } = data;
-        if (!name || !email || !company || !service || !message) {
-            throw new functions.https.HttpsError('invalid-argument', 'Missing required fields');
-        }
+        // Rate limiting check
+        const clientId = (0, security_1.getClientIdentifier)(context);
+        (0, security_1.checkRateLimit)(clientId);
+        // Validate and sanitize all inputs
+        const name = (0, security_1.validateTextWithLimit)(data.name, security_1.INPUT_LIMITS.NAME, 'Name', true);
+        const email = (0, security_1.validateEmail)(data.email);
+        const company = (0, security_1.validateTextWithLimit)(data.company, security_1.INPUT_LIMITS.COMPANY, 'Company', true);
+        const phone = (0, security_1.validatePhone)(data.phone, false);
+        const service = (0, security_1.validateService)(data.service);
+        const message = (0, security_1.validateTextWithLimit)(data.message, security_1.INPUT_LIMITS.MESSAGE, 'Message', true);
         // Get email credentials from Firebase config or environment variables
         const emailUser = ((_a = functions.config().email) === null || _a === void 0 ? void 0 : _a.user) || process.env.EMAIL_USER;
         const emailPass = ((_b = functions.config().email) === null || _b === void 0 ? void 0 : _b.pass) || ((_c = functions.config().email) === null || _c === void 0 ? void 0 : _c.password) || process.env.EMAIL_PASS;
@@ -184,6 +200,9 @@ exports.sendConsultation = functions.https.onCall(async (data, context) => {
     }
     catch (error) {
         console.error('Error sending consultation email:', error);
+        if (error instanceof functions.https.HttpsError) {
+            throw error;
+        }
         throw new functions.https.HttpsError('internal', 'Failed to send consultation request. Please try again later.');
     }
 });
