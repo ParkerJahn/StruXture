@@ -1,123 +1,99 @@
 'use client';
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Header from "@/components/Header";
-import Scene from "@/components/Scene";
-import dynamic from "next/dynamic";
-
-const FloatingGlobe = dynamic(() => import('@/components/FloatingGlobe'), {
-  ssr: false,
-  loading: () => null
-});
-
-interface Position {
-  title: string;
-  department: string;
-  location: string;
-  type: string;
-  description: string;
-  requirements: string[];
-  color: string;
-}
-
-const openPositions: Position[] = [
-  {
-    title: "Senior Full Stack Developer",
-    department: "Engineering",
-    location: "Remote / Hybrid",
-    type: "Full-time",
-    description: "Join our engineering team to build cutting-edge SaaS products that transform businesses.",
-    requirements: [
-      "5+ years of experience with React and Node.js",
-      "Experience with cloud platforms (AWS/GCP/Azure)",
-      "Strong problem-solving skills",
-      "Excellent communication abilities"
-    ],
-    color: "#00ffff"
-  },
-  {
-    title: "Product Designer",
-    department: "Design",
-    location: "Remote",
-    type: "Full-time",
-    description: "Create beautiful, intuitive user experiences that delight our customers.",
-    requirements: [
-      "3+ years of product design experience",
-      "Proficiency in Figma and design systems",
-      "Portfolio demonstrating UX/UI skills",
-      "Understanding of front-end development"
-    ],
-    color: "#ff00ff"
-  },
-  {
-    title: "Business Intelligence Analyst",
-    department: "Data & Analytics",
-    location: "Hybrid",
-    type: "Full-time",
-    description: "Help our clients make data-driven decisions with powerful insights and analytics.",
-    requirements: [
-      "Experience with SQL and data visualization tools",
-      "Strong analytical and statistical skills",
-      "Understanding of business metrics",
-      "Excellent presentation skills"
-    ],
-    color: "#ffd93d"
-  },
-  {
-    title: "Customer Success Manager",
-    department: "Customer Success",
-    location: "Remote",
-    type: "Full-time",
-    description: "Build lasting relationships with our clients and ensure their success with our platform.",
-    requirements: [
-      "2+ years in customer success or account management",
-      "Excellent communication skills",
-      "Technical aptitude",
-      "Proactive problem-solving mindset"
-    ],
-    color: "#ff6b6b"
-  }
-];
-
-const perks = [
-  { icon: "🏥", title: "Health & Wellness", description: "Comprehensive health, dental, and vision insurance" },
-  { icon: "🏠", title: "Remote First", description: "Work from anywhere with flexible hours" },
-  { icon: "📚", title: "Learning Budget", description: "$2,000 annual learning and development budget" },
-  { icon: "🌴", title: "Unlimited PTO", description: "Take time off when you need it" },
-  { icon: "💰", title: "Competitive Salary", description: "Above-market compensation and equity options" },
-  { icon: "🚀", title: "Latest Tech", description: "Top-tier equipment and tools" }
-];
+import { getFunctions, httpsCallable } from 'firebase/functions';
+import { app } from '@/services/firebase';
 
 export default function Team() {
-  const [globeSize, setGlobeSize] = useState(320);
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    phone: '',
+    position: '',
+    experience: '',
+    linkedin: '',
+    portfolio: '',
+    coverLetter: '',
+    resume: null as File | null
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    const updateGlobeSize = () => {
-      if (window.innerWidth < 475) {
-        setGlobeSize(192);
-      } else if (window.innerWidth < 640) {
-        setGlobeSize(224);
-      } else if (window.innerWidth < 768) {
-        setGlobeSize(256);
-      } else {
-        setGlobeSize(320);
-      }
-    };
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
 
-    updateGlobeSize();
-    window.addEventListener('resize', updateGlobeSize);
-    return () => window.removeEventListener('resize', updateGlobeSize);
-  }, []);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFormData(prev => ({ ...prev, resume: e.target.files![0] }));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      // Get Firebase Functions
+      const functions = getFunctions(app);
+      const sendJobApplication = httpsCallable(functions, 'sendJobApplication');
+
+      // Send application data (note: file upload would need separate handling with Storage)
+      await sendJobApplication({
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        position: formData.position,
+        experience: formData.experience,
+        linkedin: formData.linkedin,
+        portfolio: formData.portfolio,
+        coverLetter: formData.coverLetter
+      });
+
+      // Success!
+      alert('Application submitted successfully! We will be in touch soon.');
+      
+      // Reset form
+      setFormData({
+        fullName: '',
+        email: '',
+        phone: '',
+        position: '',
+        experience: '',
+        linkedin: '',
+        portfolio: '',
+        coverLetter: '',
+        resume: null
+      });
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      alert('There was an error submitting your application. Please try again or email us directly.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen w-screen bg-black relative overflow-x-hidden">
       <Header />
-      <Scene />
       
-      <div className="relative z-50 pt-20 sm:pt-24 px-4 sm:px-6 lg:px-8">
-        {/* Hero Section */}
-        <section className="max-w-7xl mx-auto py-12 sm:py-16 md:py-20 text-center">
+      {/* Hero Section with Beach Background */}
+      <section className="relative w-full h-[70vh] md:h-[80vh] overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img 
+            src="/Collab2.jpeg" 
+            alt="Team collaboration background"
+            className="w-full h-full object-cover"
+          />
+          {/* Overlay for better text readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-blue-900/20 to-slate-900"></div>
+        </div>
+
+        {/* Hero Content */}
+        <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 text-center">
           <h1 
-            className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 md:mb-8"
+            className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 md:mb-8 drop-shadow-2xl"
             style={{
               fontFamily: '"natom-pro", sans-serif',
               fontWeight: 700,
@@ -126,169 +102,236 @@ export default function Team() {
           >
             Join Our Team
           </h1>
-          <p className="text-base xs:text-lg sm:text-xl md:text-2xl text-white/80 max-w-3xl mx-auto px-4">
+          <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white max-w-4xl mx-auto px-4 drop-shadow-lg">
             Build the future of business technology with passionate, talented individuals from around the world
           </p>
-        </section>
-
-        {/* Globe Visual */}
-        <section className="max-w-7xl mx-auto mb-12 sm:mb-16 md:mb-20 flex justify-center">
-          <div className="w-48 h-48 xs:w-56 xs:h-56 sm:w-64 sm:h-64 md:w-80 md:h-80">
-            <FloatingGlobe
-              size={globeSize}
-              rotationSpeed={10}
-              gridColor="#ffffff"
-              glowColor="#ffffff"
-              texturePath="/2k_earth_daymap.jpg"
-            />
+          <p className="text-base sm:text-lg md:text-xl text-white/90 mt-6 max-w-2xl drop-shadow-lg">
+            Work from paradise. Live your best life while creating amazing products.
+          </p>
           </div>
         </section>
 
-        {/* Perks Section */}
-        <section className="max-w-7xl mx-auto mb-16 sm:mb-20 md:mb-24">
-          <h2 
-            className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-8 sm:mb-12 text-center"
+      {/* Application Form Section */}
+      <section className="relative py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900">
+        <div className="max-w-7xl mx-auto">
+          {/* Section Title */}
+          <div className="text-center mb-12 md:mb-16">
+            <h2 
+              className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4"
             style={{
               fontFamily: '"natom-pro", sans-serif',
-              fontWeight: 700
+                fontWeight: 700,
+                fontStyle: 'normal'
             }}
           >
-            Why StruXture?
+              Apply Now
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {perks.map((perk, index) => (
-              <div
-                key={index}
-                className="bg-gradient-to-br from-neutral-900/80 to-black/80 backdrop-blur-sm rounded-xl sm:rounded-2xl p-6 sm:p-8 border border-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-lg hover:shadow-white/5"
-              >
-                <div className="text-4xl sm:text-5xl mb-4">{perk.icon}</div>
-                <h3 className="text-xl xs:text-2xl font-bold text-white mb-2 sm:mb-3"
+            <p className="text-base sm:text-lg md:text-xl text-white/70 max-w-2xl mx-auto">
+              Ready to join us? Fill out the form below and we&apos;ll get back to you soon.
+            </p>
+          </div>
+
+          {/* Form + Image Grid */}
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+            
+            {/* Application Form */}
+            <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md border border-white/20 rounded-2xl p-6 sm:p-8 md:p-10 shadow-2xl shadow-blue-500/10">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                
+                {/* Full Name */}
+                <div>
+                  <label htmlFor="fullName" className="block text-white text-sm sm:text-base font-semibold mb-2">
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="fullName"
+                    name="fullName"
+                    required
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-transparent transition-all"
+                    placeholder="John Doe"
+                  />
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label htmlFor="email" className="block text-white text-sm sm:text-base font-semibold mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-transparent transition-all"
+                    placeholder="john@example.com"
+                  />
+                </div>
+
+                {/* Phone */}
+                <div>
+                  <label htmlFor="phone" className="block text-white text-sm sm:text-base font-semibold mb-2">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-transparent transition-all"
+                    placeholder="+1 (555) 123-4567"
+                  />
+                </div>
+
+                {/* Position */}
+                <div>
+                  <label htmlFor="position" className="block text-white text-sm sm:text-base font-semibold mb-2">
+                    Position Applying For *
+                  </label>
+                  <select
+                    id="position"
+                    name="position"
+                    required
+                    value={formData.position}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-transparent transition-all"
+                  >
+                    <option value="" className="bg-black">Select a position</option>
+                    <option value="developer" className="bg-black">Software Developer</option>
+                    <option value="designer" className="bg-black">Product Designer</option>
+                    <option value="analyst" className="bg-black">Business Intelligence Analyst</option>
+                    <option value="success" className="bg-black">Customer Success Manager</option>
+                    <option value="other" className="bg-black">Other</option>
+                  </select>
+                </div>
+
+                {/* Years of Experience */}
+                <div>
+                  <label htmlFor="experience" className="block text-white text-sm sm:text-base font-semibold mb-2">
+                    Years of Experience
+                  </label>
+                  <input
+                    type="text"
+                    id="experience"
+                    name="experience"
+                    value={formData.experience}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-transparent transition-all"
+                    placeholder="e.g., 5 years"
+                  />
+                </div>
+
+                {/* LinkedIn */}
+                <div>
+                  <label htmlFor="linkedin" className="block text-white text-sm sm:text-base font-semibold mb-2">
+                    LinkedIn Profile
+                  </label>
+                  <input
+                    type="url"
+                    id="linkedin"
+                    name="linkedin"
+                    value={formData.linkedin}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-transparent transition-all"
+                    placeholder="https://linkedin.com/in/yourprofile"
+                  />
+                </div>
+
+                {/* Portfolio */}
+                <div>
+                  <label htmlFor="portfolio" className="block text-white text-sm sm:text-base font-semibold mb-2">
+                    Portfolio / Website
+                  </label>
+                  <input
+                    type="url"
+                    id="portfolio"
+                    name="portfolio"
+                    value={formData.portfolio}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-transparent transition-all"
+                    placeholder="https://yourportfolio.com"
+                  />
+                </div>
+
+                {/* Resume Upload */}
+                <div>
+                  <label htmlFor="resume" className="block text-white text-sm sm:text-base font-semibold mb-2">
+                    Resume / CV *
+                  </label>
+                  <input
+                    type="file"
+                    id="resume"
+                    name="resume"
+                    accept=".pdf,.doc,.docx"
+                    required
+                    onChange={handleFileChange}
+                    className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-white/20 file:text-white file:cursor-pointer hover:file:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white/40 transition-all"
+                  />
+                  <p className="text-white/50 text-xs sm:text-sm mt-2">
+                    Accepted formats: PDF, DOC, DOCX (Max 5MB)
+                  </p>
+                </div>
+
+                {/* Cover Letter */}
+                <div>
+                  <label htmlFor="coverLetter" className="block text-white text-sm sm:text-base font-semibold mb-2">
+                    Cover Letter / Why You? *
+                  </label>
+                  <textarea
+                    id="coverLetter"
+                    name="coverLetter"
+                    required
+                    rows={6}
+                    value={formData.coverLetter}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-transparent transition-all resize-none"
+                    placeholder="Tell us about yourself and why you'd be a great fit for StruXture..."
+                  />
+                </div>
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full py-4 px-6 rounded-lg font-semibold text-base sm:text-lg bg-white text-black hover:bg-white/90 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-white/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   style={{
-                    fontFamily: '"cc-pixel-arcade-cartridge", sans-serif'
+                    fontFamily: '"natom-pro", sans-serif'
                   }}
                 >
-                  {perk.title}
+                  {isSubmitting ? 'Submitting...' : 'Submit Application'}
+                </button>
+              </form>
+            </div>
+
+            {/* Collaboration Image */}
+            <div className="relative h-full min-h-[400px] lg:min-h-[800px] rounded-2xl overflow-hidden border border-white/20 lg:sticky lg:top-8 shadow-2xl shadow-cyan-500/20">
+              <img 
+                src="/Collab1.jpeg" 
+                alt="Team collaboration"
+                className="w-full h-full object-cover"
+              />
+              {/* Optional overlay text */}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900/90 via-slate-900/50 to-transparent p-8">
+                <h3 
+                  className="text-2xl sm:text-3xl font-bold text-white mb-2"
+                  style={{ fontFamily: '"natom-pro", sans-serif' }}
+                >
+                  Join Our Team
                 </h3>
-                <p className="text-sm xs:text-base sm:text-lg text-white/70">
-                  {perk.description}
+                <p className="text-white/80 text-sm sm:text-base">
+                  Work with talented individuals from around the globe
                 </p>
               </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Open Positions */}
-        <section className="max-w-7xl mx-auto pb-20">
-          <h2 
-            className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-8 sm:mb-12 text-center"
-            style={{
-              fontFamily: '"natom-pro", sans-serif',
-              fontWeight: 700
-            }}
-          >
-            Open Positions
-          </h2>
-          <div className="space-y-6 sm:space-y-8">
-            {openPositions.map((position, index) => (
-              <div
-                key={index}
-                className="bg-gradient-to-br from-neutral-900/90 to-black/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 border border-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-xl hover:shadow-white/5"
-              >
-                <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-                  <div className="flex-1">
-                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                      <h3 
-                        className="text-2xl xs:text-3xl sm:text-4xl font-bold text-white"
-                        style={{
-                          fontFamily: '"cc-pixel-arcade-cartridge", sans-serif',
-                          color: position.color
-                        }}
-                      >
-                        {position.title}
-                      </h3>
                     </div>
                     
-                    <div className="flex flex-wrap gap-3 sm:gap-4 mb-4 sm:mb-6">
-                      <span className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-white/5 text-white/80 text-xs xs:text-sm sm:text-base border border-white/10">
-                        {position.department}
-                      </span>
-                      <span className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-white/5 text-white/80 text-xs xs:text-sm sm:text-base border border-white/10">
-                        {position.location}
-                      </span>
-                      <span className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-white/5 text-white/80 text-xs xs:text-sm sm:text-base border border-white/10">
-                        {position.type}
-                      </span>
-                    </div>
-
-                    <p className="text-sm xs:text-base sm:text-lg text-white/70 mb-4 sm:mb-6">
-                      {position.description}
-                    </p>
-
-                    <div className="mb-6 sm:mb-8">
-                      <h4 className="text-base xs:text-lg sm:text-xl font-semibold text-white mb-3 sm:mb-4">
-                        Requirements:
-                      </h4>
-                      <ul className="space-y-2 sm:space-y-3">
-                        {position.requirements.map((req, reqIndex) => (
-                          <li key={reqIndex} className="flex items-start gap-3">
-                            <span 
-                              className="text-base sm:text-lg mt-0.5 flex-shrink-0"
-                              style={{ color: position.color }}
-                            >
-                              ✦
-                            </span>
-                            <span className="text-xs xs:text-sm sm:text-base text-white/80">
-                              {req}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-
-                  <button
-                    className="lg:ml-6 py-3 sm:py-4 px-8 sm:px-10 rounded-xl font-semibold text-sm xs:text-base sm:text-lg whitespace-nowrap transition-all duration-300 hover:scale-105 hover:shadow-lg self-start"
-                    style={{
-                      background: `linear-gradient(135deg, ${position.color}20 0%, ${position.color}40 100%)`,
-                      border: `2px solid ${position.color}60`,
-                      color: position.color,
-                      fontFamily: '"cc-pixel-arcade-cartridge", sans-serif'
-                    }}
-                  >
-                    Apply Now
-                  </button>
-                </div>
-              </div>
-            ))}
+          </div>
           </div>
         </section>
-
-        {/* CTA Section */}
-        <section className="max-w-4xl mx-auto pb-20 text-center">
-          <div className="bg-gradient-to-br from-neutral-900/80 to-black/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-8 sm:p-10 md:p-12 border border-white/10">
-            <h2 
-              className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 sm:mb-6"
-              style={{
-                fontFamily: '"natom-pro", sans-serif',
-                fontWeight: 700
-              }}
-            >
-              Don&apos;t See Your Role?
-            </h2>
-            <p className="text-base xs:text-lg sm:text-xl text-white/70 mb-6 sm:mb-8">
-              We&apos;re always looking for talented individuals. Send us your resume!
-            </p>
-            <button
-              className="py-4 px-8 sm:px-12 rounded-xl font-semibold text-base sm:text-lg bg-white text-black hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-white/20"
-              style={{
-                fontFamily: '"cc-pixel-arcade-cartridge", sans-serif'
-              }}
-            >
-              Send Resume
-            </button>
-          </div>
-        </section>
-      </div>
     </div>
   );
 }

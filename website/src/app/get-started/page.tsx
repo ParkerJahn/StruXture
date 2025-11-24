@@ -1,13 +1,8 @@
 'use client';
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Header from "@/components/Header";
-import Scene from "@/components/Scene";
-import dynamic from "next/dynamic";
-
-const FloatingGlobe = dynamic(() => import('@/components/FloatingGlobe'), {
-  ssr: false,
-  loading: () => null
-});
+import { getFunctions, httpsCallable } from 'firebase/functions';
+import { app } from '@/services/firebase';
 
 interface Step {
   number: number;
@@ -44,7 +39,6 @@ const steps: Step[] = [
 ];
 
 export default function GetStarted() {
-  const [globeSize, setGlobeSize] = useState(256);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -53,28 +47,45 @@ export default function GetStarted() {
     service: '',
     message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    const updateGlobeSize = () => {
-      if (window.innerWidth < 475) {
-        setGlobeSize(192);
-      } else if (window.innerWidth < 640) {
-        setGlobeSize(224);
-      } else {
-        setGlobeSize(256);
-      }
-    };
-
-    updateGlobeSize();
-    window.addEventListener('resize', updateGlobeSize);
-    return () => window.removeEventListener('resize', updateGlobeSize);
-  }, []);
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Handle form submission here
-    alert('Thank you! We will contact you soon.');
+    setIsSubmitting(true);
+
+    try {
+      // Get Firebase Functions
+      const functions = getFunctions(app);
+      const sendConsultation = httpsCallable(functions, 'sendConsultation');
+
+      // Send consultation request
+      await sendConsultation({
+        name: formData.name,
+        email: formData.email,
+        company: formData.company,
+        phone: formData.phone,
+        service: formData.service,
+        message: formData.message
+      });
+
+      // Success!
+      alert('Thank you! We will contact you soon.');
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        company: '',
+        phone: '',
+        service: '',
+        message: ''
+      });
+    } catch (error) {
+      console.error('Error submitting consultation request:', error);
+      alert('There was an error submitting your request. Please try again or email us directly.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -85,15 +96,26 @@ export default function GetStarted() {
   };
 
   return (
-    <div className="min-h-screen w-screen bg-black relative overflow-x-hidden">
+    <div className="min-h-screen w-screen bg-gradient-to-b from-slate-900 via-cyan-950 to-amber-950 relative overflow-x-hidden">
       <Header />
-      <Scene />
       
-      <div className="relative z-50 pt-20 sm:pt-24 px-4 sm:px-6 lg:px-8">
-        {/* Hero Section */}
-        <section className="max-w-7xl mx-auto py-12 sm:py-16 md:py-20 text-center">
+      {/* Hero Section with Beach Background */}
+      <section className="relative w-full h-[70vh] md:h-[80vh] overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img 
+            src="/Beach.jpeg" 
+            alt="Beach background"
+            className="w-full h-full object-cover"
+          />
+          {/* Overlay for better text readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-blue-900/20 to-slate-900"></div>
+        </div>
+
+        {/* Hero Content */}
+        <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 text-center">
           <h1 
-            className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 md:mb-8"
+            className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 md:mb-8 drop-shadow-2xl"
             style={{
               fontFamily: '"natom-pro", sans-serif',
               fontWeight: 700,
@@ -102,26 +124,15 @@ export default function GetStarted() {
           >
             Get Started
           </h1>
-          <p className="text-base xs:text-lg sm:text-xl md:text-2xl text-white/80 max-w-3xl mx-auto px-4">
+          <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white max-w-4xl mx-auto px-4 drop-shadow-lg">
             Transform your business today with our innovative solutions. Lets build something amazing together.
           </p>
-        </section>
+        </div>
+      </section>
 
-        {/* Globe Visual */}
-        <section className="max-w-7xl mx-auto mb-12 sm:mb-16 md:mb-20 flex justify-center">
-          <div className="w-48 h-48 xs:w-56 xs:h-56 sm:w-64 sm:h-64">
-            <FloatingGlobe
-              size={globeSize}
-              rotationSpeed={15}
-              gridColor="#00ffff"
-              glowColor="#00ffff"
-              texturePath="/2k_earth_daymap.jpg"
-            />
-          </div>
-        </section>
-
-        {/* Process Steps */}
-        <section className="max-w-7xl mx-auto mb-16 sm:mb-20 md:mb-24">
+      {/* Process Steps */}
+      <section className="relative py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900">
+        <div className="max-w-7xl mx-auto">
           <h2 
             className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-8 sm:mb-12 text-center"
             style={{
@@ -135,10 +146,10 @@ export default function GetStarted() {
             {steps.map((step) => (
               <div
                 key={step.number}
-                className="bg-gradient-to-br from-neutral-900/80 to-black/80 backdrop-blur-sm rounded-xl sm:rounded-2xl p-6 sm:p-8 border border-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-lg hover:shadow-white/5 text-center"
+                className="bg-gradient-to-br from-cyan-900/70 via-teal-900/60 to-amber-900/70 backdrop-blur-md rounded-xl sm:rounded-2xl p-6 sm:p-8 border border-cyan-400/20 hover:border-amber-400/40 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/20 text-center"
               >
-                <div className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border-2 border-cyan-500/50 flex items-center justify-center mx-auto mb-4 sm:mb-6">
-                  <span className="text-xl xs:text-2xl sm:text-3xl font-bold text-cyan-400">
+                <div className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-amber-400/30 to-cyan-500/30 border-2 border-amber-400/60 flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                  <span className="text-xl xs:text-2xl sm:text-3xl font-bold text-amber-300">
                     {step.number}
                   </span>
                 </div>
@@ -156,11 +167,13 @@ export default function GetStarted() {
               </div>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Contact Form */}
-        <section className="max-w-4xl mx-auto pb-20">
-          <div className="bg-gradient-to-br from-neutral-900/90 to-black/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 lg:p-12 border border-white/10">
+      {/* Contact Form */}
+      <section className="relative py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-gradient-to-br from-cyan-900/80 via-teal-900/70 to-amber-900/80 backdrop-blur-md rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 lg:p-12 border border-cyan-400/30 shadow-2xl shadow-cyan-500/20">
             <h2 
               className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 sm:mb-6 text-center"
               style={{
@@ -282,20 +295,23 @@ export default function GetStarted() {
 
               <button
                 type="submit"
-                className="w-full py-4 sm:py-5 px-8 rounded-xl font-semibold text-base sm:text-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:from-cyan-400 hover:to-blue-400 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-cyan-500/30"
+                disabled={isSubmitting}
+                className="w-full py-4 sm:py-5 px-8 rounded-xl font-semibold text-base sm:text-lg bg-gradient-to-r from-amber-500 via-orange-500 to-cyan-500 text-white hover:from-amber-400 hover:via-orange-400 hover:to-cyan-400 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-amber-500/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 style={{
                   fontFamily: '"cc-pixel-arcade-cartridge", sans-serif'
                 }}
               >
-                Submit Request
+                {isSubmitting ? 'Submitting...' : 'Submit Request'}
               </button>
             </form>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Additional CTA */}
-        <section className="max-w-4xl mx-auto pb-20 text-center">
-          <div className="bg-gradient-to-br from-neutral-900/80 to-black/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-8 sm:p-10 md:p-12 border border-white/10">
+      {/* Additional CTA */}
+      <section className="relative py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="bg-gradient-to-br from-cyan-900/70 via-teal-900/60 to-amber-900/70 backdrop-blur-md rounded-2xl sm:rounded-3xl p-8 sm:p-10 md:p-12 border border-amber-400/30 shadow-xl shadow-amber-500/20">
             <h2 
               className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-6"
               style={{
@@ -310,23 +326,23 @@ export default function GetStarted() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center">
               <a 
-                href="tel:+15551234567"
-                className="flex items-center gap-3 text-base sm:text-lg text-cyan-400 hover:text-cyan-300 transition-colors"
+                href="tel:+15612624601"
+                className="flex items-center gap-3 text-base sm:text-lg text-amber-300 hover:text-amber-200 transition-colors font-semibold"
               >
                 <span className="text-xl sm:text-2xl">📞</span>
-                <span>+1 (555) 123-4567</span>
+                <span>561-262-4601</span>
               </a>
               <a 
-                href="mailto:hello@struxture.com"
-                className="flex items-center gap-3 text-base sm:text-lg text-cyan-400 hover:text-cyan-300 transition-colors"
+                href="mailto:jahnparker90@gmail.com"
+                className="flex items-center gap-3 text-base sm:text-lg text-amber-300 hover:text-amber-200 transition-colors font-semibold"
               >
                 <span className="text-xl sm:text-2xl">📧</span>
-                <span>hello@struxture.com</span>
+                <span>jahnparker90@gmail.com</span>
               </a>
             </div>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </div>
   );
 }
