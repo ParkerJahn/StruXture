@@ -88,6 +88,11 @@ export default function GetStarted() {
         throw new Error('Please select a service');
       }
 
+      // Check if Firebase is initialized
+      if (!app) {
+        throw new Error('Firebase is not initialized. Please contact support.');
+      }
+
       // Get Firebase Functions
       const functions = getFunctions(app);
       const sendConsultation = httpsCallable(functions, 'sendConsultation');

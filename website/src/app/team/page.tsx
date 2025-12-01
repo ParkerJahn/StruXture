@@ -98,6 +98,11 @@ export default function Team() {
         throw new Error('Please select a position');
       }
 
+      // Check if Firebase is initialized
+      if (!app) {
+        throw new Error('Firebase is not initialized. Please contact support.');
+      }
+
       // Get Firebase Functions
       const functions = getFunctions(app);
       const sendJobApplication = httpsCallable(functions, 'sendJobApplication');

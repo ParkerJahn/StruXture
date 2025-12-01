@@ -2,10 +2,56 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "StruXture - Digital Solutions",
-  description: "StruXture Digital Solutions - Innovative technology and creative design.",
+  title: "StruXture - Digital Solutions | Innovative Technology & Creative Design",
+  description: "StruXture delivers cutting-edge digital solutions combining innovative technology with creative design. Experience immersive 3D interfaces, modern web development, and transformative digital experiences.",
+  keywords: ["digital solutions", "web development", "3D design", "innovative technology", "creative design", "StruXture", "digital innovation", "web design"],
+  authors: [{ name: "StruXture" }],
+  creator: "StruXture",
+  publisher: "StruXture",
+  metadataBase: new URL('https://struxture.com'), // Update with your actual domain
+  alternates: {
+    canonical: '/',
+  },
   icons: {
-    icon: '/favicon.ico',
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' },
+    ],
+    apple: '/favicon.ico',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://struxture.com', // Update with your actual domain
+    siteName: 'StruXture',
+    title: 'StruXture - Digital Solutions | Innovative Technology & Creative Design',
+    description: 'StruXture delivers cutting-edge digital solutions combining innovative technology with creative design. Experience immersive 3D interfaces and transformative digital experiences.',
+    images: [
+      {
+        url: '/newstruxturelogo.png',
+        width: 1200,
+        height: 630,
+        alt: 'StruXture Digital Solutions',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'StruXture - Digital Solutions',
+    description: 'Innovative technology meets creative design. Experience the future of digital solutions.',
+    images: ['/newstruxturelogo.png'],
+    creator: '@struxture', // Update with your Twitter handle
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
@@ -20,10 +66,33 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'StruXture',
+    description: 'Digital Solutions - Innovative technology and creative design',
+    url: 'https://struxture.com',
+    logo: 'https://struxture.com/newstruxturelogo.png',
+    sameAs: [
+      // Add your social media URLs here
+      // 'https://twitter.com/struxture',
+      // 'https://linkedin.com/company/struxture',
+    ],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'Customer Service',
+      availableLanguage: 'English',
+    },
+  };
+
   return (
     <html lang="en">
       <head>
         <link rel="stylesheet" href="https://use.typekit.net/gei1cex.css" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
       <body>{children}</body>
     </html>

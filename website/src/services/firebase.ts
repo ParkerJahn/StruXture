@@ -1,5 +1,5 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, FirebaseApp } from "firebase/app";
 import { getAnalytics, Analytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -16,13 +16,36 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Validate Firebase config
+const isFirebaseConfigValid = () => {
+  return (
+    firebaseConfig.apiKey &&
+    firebaseConfig.authDomain &&
+    firebaseConfig.projectId &&
+    firebaseConfig.storageBucket &&
+    firebaseConfig.messagingSenderId &&
+    firebaseConfig.appId
+  );
+};
 
-// Initialize Analytics only on client side
+// Initialize Firebase only if config is valid
+let app: FirebaseApp | null = null;
 let analytics: Analytics | null = null;
-if (typeof window !== 'undefined') {
-  analytics = getAnalytics(app);
+
+if (isFirebaseConfigValid()) {
+  // Check if Firebase app is already initialized
+  if (!getApps().length) {
+    app = initializeApp(firebaseConfig);
+  } else {
+    app = getApps()[0];
+  }
+
+  // Initialize Analytics only on client side
+  if (typeof window !== 'undefined' && app) {
+    analytics = getAnalytics(app);
+  }
+} else {
+  console.warn('Firebase configuration is incomplete. Please check your environment variables.');
 }
 
 export { app, analytics };
