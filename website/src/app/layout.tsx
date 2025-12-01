@@ -4,6 +4,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "StruXture - Digital Solutions",
   description: "StruXture Digital Solutions - Innovative technology and creative design.",
+  icons: {
+    icon: '/struxturelogo.png',
+    shortcut: '/struxturelogo.png',
+    apple: '/struxturelogo.png',
+  },
 };
 
 export const viewport: Viewport = {

@@ -27,9 +27,9 @@ export default function Header() {
           {/* Logo - Home Button */}
           <Link href="/" className="flex items-center z-[101]" onClick={closeMenu}>
             <Image
-              src="/struxtureds-5.png"
+              src="/struxturelogo.png"
               alt="StruXture Logo"
-              width={120}
+              width={150}
               height={100}
               className="h-10 sm:h-12 w-auto object-contain cursor-pointer transition-opacity hover:opacity-80"
               priority

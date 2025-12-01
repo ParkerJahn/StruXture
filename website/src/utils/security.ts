@@ -1,4 +1,3 @@
-import DOMPurify from 'dompurify';
 import validator from 'validator';
 
 /**
@@ -26,19 +25,42 @@ export const RATE_LIMIT = {
 };
 
 /**
+ * Get DOMPurify instance (lazy load for client-side only)
+ */
+function getDOMPurify() {
+  if (typeof window !== 'undefined') {
+    // Dynamic import for client-side only
+    const DOMPurify = require('dompurify');
+    return DOMPurify;
+  }
+  return null;
+}
+
+/**
  * Sanitize text input to prevent XSS attacks
  */
 export function sanitizeText(input: string): string {
   if (!input) return '';
   
-  // Remove any HTML tags and dangerous characters
-  const sanitized = DOMPurify.sanitize(input, {
-    ALLOWED_TAGS: [], // No HTML tags allowed
-    ALLOWED_ATTR: [],
-  });
+  const purify = getDOMPurify();
   
-  // Trim whitespace
-  return sanitized.trim();
+  if (purify) {
+    // Remove any HTML tags and dangerous characters
+    const sanitized = purify.sanitize(input, {
+      ALLOWED_TAGS: [], // No HTML tags allowed
+      ALLOWED_ATTR: [],
+    });
+    return sanitized.trim();
+  }
+  
+  // Fallback: Basic sanitization without DOMPurify
+  // Remove HTML tags and trim
+  const sanitized = input
+    .replace(/<[^>]*>/g, '') // Remove HTML tags
+    .replace(/[<>]/g, '') // Remove angle brackets
+    .trim();
+  
+  return sanitized;
 }
 
 /**

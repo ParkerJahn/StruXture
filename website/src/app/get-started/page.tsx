@@ -190,7 +190,6 @@ export default function GetStarted() {
                     {step.number}
                   </span>
                 </div>
-                <div className="text-4xl xs:text-5xl sm:text-6xl mb-4 sm:mb-6">{step.icon}</div>
                 <h3 className="text-lg xs:text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4"
                   style={{
                     fontFamily: '"cc-pixel-arcade-cartridge", sans-serif'
