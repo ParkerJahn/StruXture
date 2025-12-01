@@ -25,39 +25,21 @@ export const RATE_LIMIT = {
 };
 
 /**
- * Get DOMPurify instance (lazy load for client-side only)
- */
-function getDOMPurify() {
-  if (typeof window !== 'undefined') {
-    // Dynamic import for client-side only
-    const DOMPurify = require('dompurify');
-    return DOMPurify;
-  }
-  return null;
-}
-
-/**
  * Sanitize text input to prevent XSS attacks
+ * Uses a comprehensive regex-based approach for client and server
  */
 export function sanitizeText(input: string): string {
   if (!input) return '';
   
-  const purify = getDOMPurify();
+  // Remove HTML tags
+  let sanitized = input.replace(/<[^>]*>/g, '');
   
-  if (purify) {
-    // Remove any HTML tags and dangerous characters
-    const sanitized = purify.sanitize(input, {
-      ALLOWED_TAGS: [], // No HTML tags allowed
-      ALLOWED_ATTR: [],
-    });
-    return sanitized.trim();
-  }
-  
-  // Fallback: Basic sanitization without DOMPurify
-  // Remove HTML tags and trim
-  const sanitized = input
-    .replace(/<[^>]*>/g, '') // Remove HTML tags
+  // Remove potentially dangerous characters
+  sanitized = sanitized
     .replace(/[<>]/g, '') // Remove angle brackets
+    .replace(/javascript:/gi, '') // Remove javascript: protocol
+    .replace(/on\w+\s*=/gi, '') // Remove event handlers like onclick=
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '') // Remove control characters
     .trim();
   
   return sanitized;
