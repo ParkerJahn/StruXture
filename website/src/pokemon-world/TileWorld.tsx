@@ -123,27 +123,16 @@ const TileWorld = () => {
 
   return (
     <div className="min-h-screen w-screen relative overflow-x-hidden">
-      {/* Clean Bright Background */}
-      <div className="fixed inset-0 z-0">
-        {/* Animated Gradient */}
-        <div 
-          className="absolute inset-0 animate-gradient"
-          style={{
-            background: 'linear-gradient(135deg, #667eea 0%, #50C876 25%, #50C878 50%, #4facfe 75%, #00f2fe 100%)',
-            backgroundSize: '400% 400%',
-          }}
-        />
-        
-        {/* Subtle Pattern Overlay */}
-        <div 
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage: `
-              repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.1) 35px, rgba(255,255,255,.1) 70px)
-            `,
-          }}
-        />
-      </div>
+      {/* Products Background */}
+      <div 
+        className="fixed inset-0 z-0"
+        style={{
+          backgroundImage: 'url(/Productsbackground.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      />
 
       <Header />
       
@@ -153,41 +142,25 @@ const TileWorld = () => {
           50% { transform: translateY(-4px); }
         }
         
-        @keyframes gradient {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
-        
-        .animate-gradient {
-          animation: gradient 15s ease infinite;
-        }
-        
         .player-sprite {
           animation: float 1s ease-in-out infinite;
         }
       `}</style>
 
-      <div className="relative z-50 flex flex-col items-center justify-start min-h-screen pt-14 sm:pt-16 px-4 pb-6 overflow-x-hidden">
+      <div className="relative z-50 flex flex-col items-center justify-start min-h-screen pt-32 sm:pt-36 md:pt-40 lg:pt-44 px-4 pb-6 overflow-x-hidden">
         {/* Title Section */}
-        <div className="mb-2 sm:mb-3 text-center">
+        <div className="mb-4 sm:mb-6 text-center bg-white rounded-xl py-4 px-6 shadow-lg border border-gray-300">
           <h1 
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-1 sm:mb-2"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 sm:mb-3"
             style={{
               fontFamily: '"natom-pro", sans-serif',
               fontWeight: 700,
-              textShadow: '2px 2px 4px rgba(255,255,255,0.1)'
+              textShadow: '2px 2px 4px rgba(0,0,0,0.1)'
             }}
           >
             EXPLORE OUR PRODUCTS
           </h1>
-          <p className="text-gray-300 text-xs sm:text-sm" style={{ fontFamily: 'monospace' }}>
+          <p className="text-gray-800 text-xs sm:text-sm font-semibold" style={{ fontFamily: 'monospace' }}>
             <span className="hidden md:inline">Use arrow keys or WASD to move • </span>
             <span className="md:hidden">Use arrow buttons below to move • </span>
             Walk into houses to discover products
@@ -349,11 +322,11 @@ const TileWorld = () => {
           {/* Up Button */}
           <button
             onClick={() => movePlayer(0, -1, 'up')}
-            className="w-20 h-20 bg-gradient-to-b from-blue-500 to-blue-700 rounded-2xl shadow-xl border-4 border-white flex items-center justify-center text-white text-5xl font-black active:scale-95 transition-all touch-none"
+            className="w-20 h-20 bg-gradient-to-b from-blue-600 to-blue-800 rounded-2xl shadow-xl border-4 border-gray-200 flex items-center justify-center text-white text-5xl font-black active:scale-95 transition-all touch-none"
             aria-label="Move Up"
             style={{ 
               WebkitTapHighlightColor: 'transparent',
-              boxShadow: '0 6px 16px rgba(0,0,0,0.4)'
+              boxShadow: '0 6px 16px rgba(0,0,0,0.3)'
             }}
           >
             ▲
@@ -363,11 +336,11 @@ const TileWorld = () => {
           <div className="flex gap-8">
             <button
               onClick={() => movePlayer(-1, 0, 'left')}
-              className="w-20 h-20 bg-gradient-to-b from-blue-500 to-blue-700 rounded-2xl shadow-xl border-4 border-white flex items-center justify-center text-white text-5xl font-black active:scale-95 transition-all touch-none"
+              className="w-20 h-20 bg-gradient-to-b from-blue-600 to-blue-800 rounded-2xl shadow-xl border-4 border-gray-200 flex items-center justify-center text-white text-5xl font-black active:scale-95 transition-all touch-none"
               aria-label="Move Left"
               style={{ 
                 WebkitTapHighlightColor: 'transparent',
-                boxShadow: '0 6px 16px rgba(0,0,0,0.4)'
+                boxShadow: '0 6px 16px rgba(0,0,0,0.3)'
               }}
             >
               ◀
@@ -375,11 +348,11 @@ const TileWorld = () => {
             
             <button
               onClick={() => movePlayer(1, 0, 'right')}
-              className="w-20 h-20 bg-gradient-to-b from-blue-500 to-blue-700 rounded-2xl shadow-xl border-4 border-white flex items-center justify-center text-white text-5xl font-black active:scale-95 transition-all touch-none"
+              className="w-20 h-20 bg-gradient-to-b from-blue-600 to-blue-800 rounded-2xl shadow-xl border-4 border-gray-200 flex items-center justify-center text-white text-5xl font-black active:scale-95 transition-all touch-none"
               aria-label="Move Right"
               style={{ 
                 WebkitTapHighlightColor: 'transparent',
-                boxShadow: '0 6px 16px rgba(0,0,0,0.4)'
+                boxShadow: '0 6px 16px rgba(0,0,0,0.3)'
               }}
             >
               ▶
@@ -389,11 +362,11 @@ const TileWorld = () => {
           {/* Down Button */}
           <button
             onClick={() => movePlayer(0, 1, 'down')}
-            className="w-20 h-20 bg-gradient-to-b from-blue-500 to-blue-700 rounded-2xl shadow-xl border-4 border-white flex items-center justify-center text-white text-5xl font-black active:scale-95 transition-all touch-none"
+            className="w-20 h-20 bg-gradient-to-b from-blue-600 to-blue-800 rounded-2xl shadow-xl border-4 border-gray-200 flex items-center justify-center text-white text-5xl font-black active:scale-95 transition-all touch-none"
             aria-label="Move Down"
             style={{ 
               WebkitTapHighlightColor: 'transparent',
-              boxShadow: '0 6px 16px rgba(0,0,0,0.4)'
+              boxShadow: '0 6px 16px rgba(0,0,0,0.3)'
             }}
           >
             ▼
@@ -408,16 +381,16 @@ const TileWorld = () => {
               Keyboard Controls
             </p>
             <div className="grid grid-cols-4 gap-2 text-gray-800 text-xs" style={{ fontFamily: 'monospace' }}>
-              <div className="flex items-center justify-center gap-1 bg-purple-100 border border-purple-300 px-2 py-1.5 rounded">
+              <div className="flex items-center justify-center gap-1 bg-blue-100 border border-blue-300 px-2 py-1.5 rounded">
                 <span>W/↑</span>
               </div>
-              <div className="flex items-center justify-center gap-1 bg-purple-100 border border-purple-300 px-2 py-1.5 rounded">
+              <div className="flex items-center justify-center gap-1 bg-blue-100 border border-blue-300 px-2 py-1.5 rounded">
                 <span>S/↓</span>
               </div>
-              <div className="flex items-center justify-center gap-1 bg-purple-100 border border-purple-300 px-2 py-1.5 rounded">
+              <div className="flex items-center justify-center gap-1 bg-blue-100 border border-blue-300 px-2 py-1.5 rounded">
                 <span>A/←</span>
               </div>
-              <div className="flex items-center justify-center gap-1 bg-purple-100 border border-purple-300 px-2 py-1.5 rounded">
+              <div className="flex items-center justify-center gap-1 bg-blue-100 border border-blue-300 px-2 py-1.5 rounded">
                 <span>D/→</span>
               </div>
             </div>
@@ -425,7 +398,7 @@ const TileWorld = () => {
           
           {/* Mobile Instructions */}
           <div className="md:hidden text-center text-gray-800 text-xs" style={{ fontFamily: 'monospace' }}>
-            <div className="bg-purple-100 border border-purple-300 px-3 py-2 rounded">
+            <div className="bg-blue-100 border border-blue-300 px-3 py-2 rounded">
               <span className="text-sm">Use arrow buttons above to move around</span>
             </div>
           </div>

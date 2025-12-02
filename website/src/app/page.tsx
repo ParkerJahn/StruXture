@@ -165,9 +165,10 @@ export default function Home() {
               <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-white/10">
                 {/* EDIT: Replace with your image */}
                 <img 
-                  src="/struxtureds-1.png" 
-                  alt="Description of image"
+                  src="/StruXturelogowords-removebg-preview.png" 
+                  alt="StruXture - Innovative Digital Solutions Brand Logo"
                   className="w-full h-full object-cover"
+                  loading="lazy"
                 />
                 {/* Or use this placeholder if you don't have an image yet:
                 <div className="flex items-center justify-center h-full">
@@ -196,7 +197,7 @@ export default function Home() {
                 <video 
                   className="w-full h-full object-cover"
                   controls
-                  poster="/struxtureds-5.png"
+                  poster="/struxturelogo.png"
                 >
                   <source src="/struxtureds-5-Intro.mp4" type="video/mp4" />
                   Your browser does not support the video tag.
@@ -215,9 +216,10 @@ export default function Home() {
               <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden bg-gradient-to-br from-green-500/20 to-blue-500/20 border border-white/10 md:order-1">
                 {/* EDIT: Replace with your image */}
                 <img 
-                  src="/struxtureds-2.png" 
-                  alt="Description of image"
+                  src="/struxturelogo.png" 
+                  alt="StruXture Company Logo - Digital Innovation Brand"
                   className="w-full h-full object-cover"
+                  loading="lazy"
                 />
                 {/* Or use placeholder:
                 <div className="flex items-center justify-center h-full">
@@ -250,9 +252,10 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent z-10"></div>
               {/* EDIT: Replace with your image */}
               <img 
-                src="/struxtureds-3.png" 
-                alt="Description of image"
+                src="/StruXturelogowords-removebg-preview.png" 
+                alt="StruXture Brand Identity - Where Innovation Meets Design"
                 className="w-full h-full object-cover"
+                loading="lazy"
               />
               {/* Or use placeholder:
               <div className="w-full h-full bg-gradient-to-br from-orange-500/20 to-red-500/20 border border-white/10"></div>
@@ -288,9 +291,10 @@ export default function Home() {
                   <div className="w-full h-48 mb-4 rounded-lg overflow-hidden bg-gradient-to-br from-cyan-500/20 to-blue-500/20">
                     {/* EDIT: Add your image */}
                     <img 
-                      src="/struxtureds-4.png" 
-                      alt="Description"
+                      src="/struxturelogo.png" 
+                      alt="StruXture Technology Solutions - Premium Digital Services"
                       className="w-full h-full object-cover"
+                      loading="lazy"
                     />
                   </div>
                   <h4 className="text-xl font-bold mb-3">Feature/Point 1</h4>

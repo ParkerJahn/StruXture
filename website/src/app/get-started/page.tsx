@@ -1,5 +1,5 @@
 'use client';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { app } from '@/services/firebase';
@@ -48,6 +48,15 @@ const steps: Step[] = [
 ];
 
 export default function GetStarted() {
+  // Set page metadata
+  useEffect(() => {
+    document.title = 'Get Started - StruXture | Request a Consultation';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Start your digital transformation journey with StruXture. Book a free consultation and discover innovative solutions for your business needs.');
+    }
+  }, []);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -138,7 +147,7 @@ export default function GetStarted() {
   };
 
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-b from-slate-900 via-cyan-950 to-amber-950 relative overflow-x-hidden">
+    <div className="min-h-screen w-screen bg-black relative overflow-x-hidden">
       <Header />
       
       {/* Hero Section with Beach Background */}
@@ -147,8 +156,9 @@ export default function GetStarted() {
         <div className="absolute inset-0">
           <img 
             src="/Beach.jpeg" 
-            alt="Beach background"
+            alt="Tranquil beach paradise - Work remotely from anywhere with StruXture"
             className="w-full h-full object-cover"
+            loading="eager"
           />
           {/* Overlay for better text readability */}
           <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-blue-900/20 to-slate-900"></div>

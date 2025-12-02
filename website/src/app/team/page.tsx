@@ -1,5 +1,5 @@
 'use client';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { app } from '@/services/firebase';
@@ -16,6 +16,15 @@ import {
 } from '@/utils/security';
 
 export default function Team() {
+  // Set page metadata
+  useEffect(() => {
+    document.title = 'Join Our Team - StruXture | Career Opportunities';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Join the StruXture team! Work remotely with talented individuals worldwide. Explore career opportunities in software development, design, and more.');
+    }
+  }, []);
+
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -150,8 +159,9 @@ export default function Team() {
         <div className="absolute inset-0">
           <img 
             src="/Collab2.jpeg" 
-            alt="Team collaboration background"
+            alt="Collaborative team workspace - Join StruXture's remote work culture"
             className="w-full h-full object-cover"
+            loading="eager"
           />
           {/* Overlay for better text readability */}
           <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-blue-900/20 to-slate-900"></div>
@@ -396,8 +406,9 @@ export default function Team() {
             <div className="relative h-full min-h-[400px] lg:min-h-[800px] rounded-2xl overflow-hidden border border-white/20 lg:sticky lg:top-8 shadow-2xl shadow-cyan-500/20">
               <img 
                 src="/Collab1.jpeg" 
-                alt="Team collaboration"
+                alt="StruXture team members collaborating on innovative projects"
                 className="w-full h-full object-cover"
+                loading="lazy"
               />
               {/* Optional overlay text */}
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900/90 via-slate-900/50 to-transparent p-8">
