@@ -1,6 +1,13 @@
 'use client';
 import { useEffect } from 'react';
-import TileWorld from '@/pokemon-world/TileWorld';
+import dynamic from 'next/dynamic';
+import LoadingSpinner from '@/components/LoadingSpinner';
+
+// Lazy load TileWorld to reduce initial bundle size
+const TileWorld = dynamic(() => import('@/pokemon-world/TileWorld'), {
+  ssr: false,
+  loading: () => <LoadingSpinner />
+});
 
 export default function Products() {
   // Set page metadata

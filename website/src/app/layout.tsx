@@ -96,7 +96,9 @@ export default function RootLayout({
         <link rel="preconnect" href="https://firebaseapp.com" />
         
         {/* Fonts - loaded with display swap for better performance */}
-        <link rel="stylesheet" href="https://use.typekit.net/gei1cex.css" />
+        <link rel="preload" href="https://use.typekit.net/gei1cex.css" as="style" />
+        <link rel="stylesheet" href="https://use.typekit.net/gei1cex.css" media="print" onLoad="this.media='all'" />
+        <noscript><link rel="stylesheet" href="https://use.typekit.net/gei1cex.css" /></noscript>
         
         {/* Structured Data for SEO */}
         <script

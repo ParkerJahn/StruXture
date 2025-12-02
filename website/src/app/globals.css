@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Font display optimization - prevent invisible text during load */
+@font-face {
+  font-family: 'natom-pro';
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'cc-pixel-arcade-cartridge';
+  font-display: swap;
+}
+
 * {
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
