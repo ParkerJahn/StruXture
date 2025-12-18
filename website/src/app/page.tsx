@@ -3,6 +3,7 @@ import "./globals.css";
 import Scene from "@/components/Scene";
 import ScrollingGlobes, { GlobeConfig } from "@/components/ScrollingGlobes";
 import Header from "@/components/Header";
+import Link from "next/link";
 import dynamic from "next/dynamic";
 
 const TextType = dynamic(() => import("@/components/TextType"), {
@@ -84,11 +85,11 @@ export default function Home() {
       
       {/* Content sections to enable scrolling */}
       <div className="relative z-50 pointer-events-auto">
-        {/* Intro Section */}
+        {/* Hero Section */}
         <section className="h-[100vh] flex items-center justify-center px-4 sm:px-6 md:px-8 bg-gradient-to-b from-neutral-800/80 via-neutral-900/70 to-black/30 relative z-50">
-          <div className="text-center text-white max-w-4xl relative z-50 w-full">
+          <div className="text-center text-white max-w-5xl relative z-50 w-full">
             <TextType
-              text="Welcome to StruXture"
+              text="Build Structured, Scalable Digital Solutions That Drive Growth"
               as="h1"
               className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-6 px-2"
               style={{
@@ -101,9 +102,19 @@ export default function Home() {
               cursorCharacter="|"
               loop={false}
               initialDelay={500}
+              startOnVisible={true}
             />
-            <p className="text-base xs:text-lg sm:text-xl md:text-2xl opacity-80 mb-4 md:mb-8 px-2">Where innovation meets design</p>
-            <p className="text-xs xs:text-sm sm:text-base md:text-lg opacity-60 px-2">Scroll to explore</p>
+            <p className="text-base xs:text-lg sm:text-xl md:text-2xl opacity-90 mb-8 md:mb-12 px-2 max-w-4xl mx-auto">
+              Custom software, AI automation, and digital infrastructure designed for performance, security, and long-term impact.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-2">
+              <Link href="/get-started" className="px-8 py-4 bg-white text-black hover:bg-white/90 rounded-lg text-lg font-semibold transition-all hover:scale-105 w-full sm:w-auto text-center">
+                Start a Project
+              </Link>
+              <Link href="/products" className="px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-lg font-semibold transition-all hover:scale-105 w-full sm:w-auto text-center">
+                View Our Services
+              </Link>
+            </div>
           </div>
         </section>
 
@@ -114,223 +125,221 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Transition section */}
-        <section className="h-[100vh] flex items-center justify-center px-4 sm:px-6 md:px-8">
-          <div className="text-center text-white max-w-4xl w-full">
-            <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold mb-3 md:mb-4 px-2">Experience the Journey</h2>
-            <p className="text-sm xs:text-base sm:text-lg md:text-xl opacity-80 px-2">Smooth scrolling globe transitions</p>
+        {/* Trust / Positioning Section */}
+        <section className="min-h-[100vh] flex items-center justify-center px-4 sm:px-6 md:px-8 py-20">
+          <div className="text-center text-white max-w-4xl w-full bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-8 hover:bg-white/10 transition-all">
+            <TextType
+              text="Technology Built With Purpose"
+              as="h2"
+              className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold mb-6"
+              style={{
+                fontFamily: '"natom-pro", sans-serif',
+                fontWeight: 700,
+                fontStyle: 'normal'
+              }}
+              typingSpeed={50}
+              showCursor={true}
+              cursorCharacter="|"
+              loop={false}
+              initialDelay={200}
+              startOnVisible={true}
+            />
+            <p className="text-base sm:text-lg md:text-xl opacity-90 leading-relaxed">
+              StruXture Digital Solutions is a modern digital consultancy focused on turning complex ideas into reliable, production-ready software. We partner with founders and businesses to build technology that is cleanly designed, secure by default, and engineered to scale.
+            </p>
           </div>
         </section>
 
-        {/* Mission Statement Section - CUSTOMIZE YOUR CONTENT HERE */}
+        {/* Services Overview Section */}
         <section className="min-h-[100vh] py-20 px-4 sm:px-6 md:px-8 lg:px-12">
           <div className="max-w-7xl mx-auto text-white">
             
             {/* Section Title */}
             <div className="text-center mb-16">
-              <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold mb-6"
+              <TextType
+                text="What We Build"
+                as="h2"
+                className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold mb-6"
                   style={{
                     fontFamily: '"natom-pro", sans-serif',
                     fontWeight: 700,
                     fontStyle: 'normal'
-                  }}>
-                Our Mission {/* EDIT: Change this title */}
-              </h2>
-              <p className="text-lg sm:text-xl md:text-2xl opacity-80 max-w-4xl mx-auto">
-                Your tagline or brief introduction here {/* EDIT: Add your tagline */}
-              </p>
-            </div>
-
-            {/* Content Block 1: Text + Image */}
-            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center mb-20">
-              {/* Text Content */}
-              <div className="space-y-4">
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4"
-                    style={{ fontFamily: '"natom-pro", sans-serif' }}>
-                  Section Title 1 {/* EDIT: First section title */}
-                </h3>
-                <p className="text-base sm:text-lg md:text-xl opacity-90 leading-relaxed">
-                  Your first paragraph goes here. Describe your mission, values, or approach. 
-                  This is where you tell your story and connect with your audience.
-                  {/* EDIT: Replace with your content */}
-                </p>
-                <p className="text-base sm:text-lg md:text-xl opacity-90 leading-relaxed">
-                  Add a second paragraph to expand on your ideas. Explain what makes your 
-                  company unique and why customers should choose you.
-                  {/* EDIT: Replace with your content */}
-                </p>
-              </div>
-              
-              {/* Image Placeholder */}
-              <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-white/10">
-                {/* EDIT: Replace with your image */}
-                <img 
-                  src="/StruXturelogowords-removebg-preview.png" 
-                  alt="StruXture - Innovative Digital Solutions Brand Logo"
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-                {/* Or use this placeholder if you don't have an image yet:
-                <div className="flex items-center justify-center h-full">
-                  <p className="text-white/50 text-lg">Your Image Here</p>
-                </div>
-                */}
-              </div>
-            </div>
-
-            {/* Content Block 2: Video/Media Section */}
-            <div className="mb-20">
-              <div className="text-center mb-8">
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4"
-                    style={{ fontFamily: '"natom-pro", sans-serif' }}>
-                  Section Title 2 {/* EDIT: Second section title */}
-                </h3>
-                <p className="text-base sm:text-lg md:text-xl opacity-90 max-w-3xl mx-auto">
-                  Introduce your video or media content here. Explain what viewers will learn or see.
-                  {/* EDIT: Replace with your content */}
-                </p>
-              </div>
-              
-              {/* Video Placeholder */}
-              <div className="relative w-full max-w-5xl mx-auto h-64 md:h-96 lg:h-[500px] rounded-lg overflow-hidden bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-white/10">
-                {/* EDIT: Replace with your video */}
-                <video 
-                  className="w-full h-full object-cover"
-                  controls
-                  poster="/struxturelogo.png"
-                >
-                  <source src="/struxtureds-5-Intro.mp4" type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-                {/* Or use this placeholder:
-                <div className="flex items-center justify-center h-full">
-                  <p className="text-white/50 text-lg">Your Video Here (.mp4, .webm)</p>
-                </div>
-                */}
-              </div>
-            </div>
-
-            {/* Content Block 3: Image + Text (Reversed) */}
-            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center mb-20">
-              {/* Image Placeholder */}
-              <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden bg-gradient-to-br from-green-500/20 to-blue-500/20 border border-white/10 md:order-1">
-                {/* EDIT: Replace with your image */}
-                <img 
-                  src="/struxturelogo.png" 
-                  alt="StruXture Company Logo - Digital Innovation Brand"
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-                {/* Or use placeholder:
-                <div className="flex items-center justify-center h-full">
-                  <p className="text-white/50 text-lg">Your Image Here</p>
-                </div>
-                */}
-              </div>
-              
-              {/* Text Content */}
-              <div className="space-y-4 md:order-2">
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4"
-                    style={{ fontFamily: '"natom-pro", sans-serif' }}>
-                  Section Title 3 {/* EDIT: Third section title */}
-                </h3>
-                <p className="text-base sm:text-lg md:text-xl opacity-90 leading-relaxed">
-                  Another paragraph for your content. You can discuss your team, your process, 
-                  or your achievements here.
-                  {/* EDIT: Replace with your content */}
-                </p>
-                <p className="text-base sm:text-lg md:text-xl opacity-90 leading-relaxed">
-                  Continue building your narrative. Each block helps tell your story 
-                  in a visual and engaging way.
-                  {/* EDIT: Replace with your content */}
-                </p>
-              </div>
-            </div>
-
-            {/* Content Block 4: Full-Width Image with Overlay Text */}
-            <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden mb-20">
-              <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent z-10"></div>
-              {/* EDIT: Replace with your image */}
-              <img 
-                src="/StruXturelogowords-removebg-preview.png" 
-                alt="StruXture Brand Identity - Where Innovation Meets Design"
-                className="w-full h-full object-cover"
-                loading="lazy"
+                }}
+                typingSpeed={50}
+                showCursor={true}
+                cursorCharacter="|"
+                loop={false}
+                initialDelay={200}
+                startOnVisible={true}
               />
-              {/* Or use placeholder:
-              <div className="w-full h-full bg-gradient-to-br from-orange-500/20 to-red-500/20 border border-white/10"></div>
-              */}
+            </div>
+
+            {/* Service Cards Grid */}
+            <div className="grid md:grid-cols-2 gap-8 mb-32">
+              {/* Service 1 */}
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-8 hover:bg-white/10 transition-all">
+                <h3 className="text-2xl sm:text-3xl font-bold mb-4"
+                    style={{ fontFamily: '"natom-pro", sans-serif' }}>
+                  Custom SaaS Development
+                </h3>
+                <p className="text-base sm:text-lg opacity-90 leading-relaxed">
+                  We transform ideas into full-scale SaaS platforms—handling architecture, development, and deployment so you can focus on growth and market fit.
+                </p>
+              </div>
               
-              {/* Overlay Text */}
-              <div className="absolute inset-0 z-20 flex items-center justify-start px-8 md:px-16">
-                <div className="max-w-2xl">
-                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4"
+              {/* Service 2 */}
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-8 hover:bg-white/10 transition-all">
+                <h3 className="text-2xl sm:text-3xl font-bold mb-4"
+                    style={{ fontFamily: '"natom-pro", sans-serif' }}>
+                  AI Automation & Integration
+                </h3>
+                <p className="text-base sm:text-lg opacity-90 leading-relaxed">
+                  We securely integrate AI into your workflows to automate processes, analyze data, and surface insights that give your business a competitive edge.
+                </p>
+            </div>
+
+              {/* Service 3 */}
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-8 hover:bg-white/10 transition-all">
+                <h3 className="text-2xl sm:text-3xl font-bold mb-4"
+                    style={{ fontFamily: '"natom-pro", sans-serif' }}>
+                  Custom CRM & Workflow Systems
+                </h3>
+                <p className="text-base sm:text-lg opacity-90 leading-relaxed">
+                  Purpose-built CRM solutions designed around your business processes, helping you centralize data, automate workflows, and operate efficiently.
+                </p>
+              </div>
+              
+              {/* Service 4 */}
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-8 hover:bg-white/10 transition-all">
+                <h3 className="text-2xl sm:text-3xl font-bold mb-4"
+                    style={{ fontFamily: '"natom-pro", sans-serif' }}>
+                  Websites & Landing Pages
+                </h3>
+                <p className="text-base sm:text-lg opacity-90 leading-relaxed">
+                  Modern, high-performance websites and landing pages built to clearly communicate value and convert users.
+                </p>
+              </div>
+            </div>
+
+            {/* How We Work Section */}
+            <div className="mb-32">
+              <div className="text-center mb-16">
+                <TextType
+                  text="Our Approach"
+                  as="h2"
+                  className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold mb-6"
+                  style={{
+                    fontFamily: '"natom-pro", sans-serif',
+                    fontWeight: 700,
+                    fontStyle: 'normal'
+                  }}
+                  typingSpeed={50}
+                  showCursor={true}
+                  cursorCharacter="|"
+                  loop={false}
+                  initialDelay={200}
+                  startOnVisible={true}
+                />
+              </div>
+              
+              <div className="space-y-8 max-w-4xl mx-auto">
+                {/* Step 1 */}
+                <div className="flex gap-6 items-start bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-8 hover:bg-white/10 transition-all">
+                  <div className="flex-shrink-0 w-12 h-12 bg-white/10 border border-white/20 rounded-full flex items-center justify-center text-2xl font-bold">
+                    1
+                  </div>
+                  <div>
+                    <h3 className="text-2xl sm:text-3xl font-bold mb-3"
+                    style={{ fontFamily: '"natom-pro", sans-serif' }}>
+                      Understand
+                </h3>
+                    <p className="text-base sm:text-lg opacity-90 leading-relaxed">
+                      We take the time to understand your business, goals, and constraints before writing a single line of code.
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Step 2 */}
+                <div className="flex gap-6 items-start bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-8 hover:bg-white/10 transition-all">
+                  <div className="flex-shrink-0 w-12 h-12 bg-white/10 border border-white/20 rounded-full flex items-center justify-center text-2xl font-bold">
+                    2
+                  </div>
+                  <div>
+                    <h3 className="text-2xl sm:text-3xl font-bold mb-3"
+                        style={{ fontFamily: '"natom-pro", sans-serif' }}>
+                      Design & Build
+                    </h3>
+                    <p className="text-base sm:text-lg opacity-90 leading-relaxed">
+                      We design clean, scalable systems and build with performance, security, and maintainability in mind.
+                </p>
+              </div>
+            </div>
+
+                {/* Step 3 */}
+                <div className="flex gap-6 items-start bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-8 hover:bg-white/10 transition-all">
+                  <div className="flex-shrink-0 w-12 h-12 bg-white/10 border border-white/20 rounded-full flex items-center justify-center text-2xl font-bold">
+                    3
+                  </div>
+                  <div>
+                    <h3 className="text-2xl sm:text-3xl font-bold mb-3"
                       style={{ fontFamily: '"natom-pro", sans-serif' }}>
-                    Overlay Title {/* EDIT: Overlay section title */}
+                      Deploy & Scale
                   </h3>
-                  <p className="text-base sm:text-lg md:text-xl opacity-90">
-                    Text overlaid on image for dramatic effect. Perfect for quotes or key messages.
-                    {/* EDIT: Replace with your content */}
+                    <p className="text-base sm:text-lg opacity-90 leading-relaxed">
+                      We deliver production-ready solutions built to evolve as your business grows.
                   </p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Content Block 5: Three Column Grid */}
-            <div className="mb-20">
-              <div className="text-center mb-12">
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4"
-                    style={{ fontFamily: '"natom-pro", sans-serif' }}>
-                  Section Title 4 {/* EDIT: Fourth section title */}
-                </h3>
+            {/* Why StruXture Section */}
+            <div className="mb-32">
+              <div className="text-center mb-16">
+                <TextType
+                  text="Why Work With Us"
+                  as="h2"
+                  className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold mb-6"
+                  style={{
+                    fontFamily: '"natom-pro", sans-serif',
+                    fontWeight: 700,
+                    fontStyle: 'normal'
+                  }}
+                  typingSpeed={50}
+                  showCursor={true}
+                  cursorCharacter="|"
+                  loop={false}
+                  initialDelay={200}
+                  startOnVisible={true}
+                />
               </div>
               
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {/* Column 1 */}
-                <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 hover:bg-white/10 transition-all">
-                  <div className="w-full h-48 mb-4 rounded-lg overflow-hidden bg-gradient-to-br from-cyan-500/20 to-blue-500/20">
-                    {/* EDIT: Add your image */}
-                    <img 
-                      src="/struxturelogo.png" 
-                      alt="StruXture Technology Solutions - Premium Digital Services"
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
+              <div className="max-w-4xl mx-auto space-y-6">
+                <div className="flex gap-4 items-start bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6">
+                  <div className="flex-shrink-0 text-2xl">✓</div>
+                  <p className="text-base sm:text-lg opacity-90 leading-relaxed">
+                    Security-first and scalability-driven development
+                  </p>
                   </div>
-                  <h4 className="text-xl font-bold mb-3">Feature/Point 1</h4>
-                  <p className="text-base opacity-80">
-                    Brief description of this feature or point. Keep it concise.
-                    {/* EDIT: Replace with your content */}
+                
+                <div className="flex gap-4 items-start bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6">
+                  <div className="flex-shrink-0 text-2xl">✓</div>
+                  <p className="text-base sm:text-lg opacity-90 leading-relaxed">
+                    Custom solutions—no templates or one-size-fits-all platforms
                   </p>
                 </div>
                 
-                {/* Column 2 */}
-                <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 hover:bg-white/10 transition-all">
-                  <div className="w-full h-48 mb-4 rounded-lg overflow-hidden bg-gradient-to-br from-purple-500/20 to-pink-500/20">
-                    {/* EDIT: Add your image */}
-                    <div className="flex items-center justify-center h-full">
-                      <p className="text-white/50">Your Image Here</p>
-                    </div>
-                  </div>
-                  <h4 className="text-xl font-bold mb-3">Feature/Point 2</h4>
-                  <p className="text-base opacity-80">
-                    Brief description of this feature or point. Keep it concise.
-                    {/* EDIT: Replace with your content */}
+                <div className="flex gap-4 items-start bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6">
+                  <div className="flex-shrink-0 text-2xl">✓</div>
+                  <p className="text-base sm:text-lg opacity-90 leading-relaxed">
+                    Clear communication and transparent execution
                   </p>
                 </div>
                 
-                {/* Column 3 */}
-                <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 hover:bg-white/10 transition-all">
-                  <div className="w-full h-48 mb-4 rounded-lg overflow-hidden bg-gradient-to-br from-green-500/20 to-teal-500/20">
-                    {/* EDIT: Add your image */}
-                    <div className="flex items-center justify-center h-full">
-                      <p className="text-white/50">Your Image Here</p>
-                    </div>
-                  </div>
-                  <h4 className="text-xl font-bold mb-3">Feature/Point 3</h4>
-                  <p className="text-base opacity-80">
-                    Brief description of this feature or point. Keep it concise.
-                    {/* EDIT: Replace with your content */}
+                <div className="flex gap-4 items-start bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6">
+                  <div className="flex-shrink-0 text-2xl">✓</div>
+                  <p className="text-base sm:text-lg opacity-90 leading-relaxed">
+                    Built for real-world use, not just demos
                   </p>
                 </div>
               </div>
@@ -338,17 +347,27 @@ export default function Home() {
 
             {/* Final Call-to-Action */}
             <div className="text-center py-16">
-              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6"
-                  style={{ fontFamily: '"natom-pro", sans-serif' }}>
-                Ready to Get Started? {/* EDIT: CTA title */}
-              </h3>
-              <p className="text-lg sm:text-xl opacity-90 mb-8 max-w-2xl mx-auto">
-                Final message or call-to-action. Encourage visitors to take the next step.
-                {/* EDIT: Replace with your content */}
+              <TextType
+                text="Let's Build Something That Lasts"
+                as="h3"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6"
+                style={{ fontFamily: '"natom-pro", sans-serif' }}
+                typingSpeed={50}
+                showCursor={true}
+                cursorCharacter="|"
+                loop={false}
+                initialDelay={200}
+                startOnVisible={true}
+              />
+              <p className="text-lg sm:text-xl opacity-90 mb-8 max-w-3xl mx-auto">
+                Whether you&apos;re launching a new product or improving existing systems, StruXture Digital Solutions is ready to help you build with confidence.
               </p>
-              <button className="px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-lg font-semibold transition-all hover:scale-105">
-                Contact Us {/* EDIT: Button text */}
-              </button>
+              <Link href="/get-started" className="inline-block px-8 py-4 bg-white text-black hover:bg-white/90 rounded-lg text-lg font-semibold transition-all hover:scale-105">
+                Get in Touch
+              </Link>
+              <p className="text-sm opacity-60 mt-8">
+                Structured Technology. Built to Scale.
+              </p>
             </div>
 
           </div>

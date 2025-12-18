@@ -19,7 +19,7 @@ export default function Products() {
     }
   }, []);
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-gray-900">
       {/* Game Section */}
       <TileWorld />
       

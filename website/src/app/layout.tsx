@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   authors: [{ name: "StruXture" }],
   creator: "StruXture",
   publisher: "StruXture",
-  metadataBase: new URL('https://struxture.com'), // Update with your actual domain
+  metadataBase: new URL('https://struxturesoftware.com'), // Update with your actual domain
   alternates: {
     canonical: '/',
   },
