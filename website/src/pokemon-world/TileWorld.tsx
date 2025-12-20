@@ -127,10 +127,25 @@ const TileWorld = () => {
       <div 
         className="fixed inset-0 z-0"
         style={{
-          backgroundImage: 'url(/Productsbackground.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
+          background: 'linear-gradient(135deg, #404040 0%, #262626 50%, #1a1a1a 100%)',
+        }}
+      />
+      {/* Subtle grid pattern overlay */}
+      <div 
+        className="fixed inset-0 z-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '40px 40px'
+        }}
+      />
+      {/* Ambient glow effect */}
+      <div 
+        className="fixed inset-0 z-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse at 50% 0%, rgba(64,64,64,0.4) 0%, transparent 60%)',
         }}
       />
 
@@ -147,7 +162,7 @@ const TileWorld = () => {
         }
       `}</style>
 
-      <div className="relative z-50 flex flex-col items-center justify-start min-h-screen pt-32 sm:pt-36 md:pt-40 lg:pt-44 px-4 pb-6 overflow-x-hidden">
+      <div className="relative z-50 flex flex-col items-center justify-start min-h-screen px-4 pb-6 overflow-x-hidden" style={{ paddingTop: '160px' }}>
         {/* Title Section */}
         <div className="mb-4 sm:mb-6 text-center bg-white rounded-xl py-4 px-6 shadow-lg border border-gray-300">
           <h1 

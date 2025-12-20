@@ -19,33 +19,32 @@ export default function Products() {
     }
   }, []);
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-neutral-700">
       {/* Game Section */}
       <TileWorld />
       
       {/* Product Information Section - CUSTOMIZE YOUR CONTENT HERE */}
       <section className="min-h-[100vh] pt-48 md:pt-56 lg:pt-64 pb-20 px-4 sm:px-6 md:px-8 lg:px-12 relative overflow-hidden"
                style={{
-                 background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+                 background: 'linear-gradient(180deg, #1a1a1a 0%, #262626 50%, #333333 100%)',
                }}>
-        {/* Office-like background overlay */}
-        <div className="absolute inset-0 opacity-30"
-             style={{
-               backgroundImage: `
-                 linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px),
-                 linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px)
-               `,
-               backgroundSize: '50px 50px'
-             }}></div>
+        {/* Subtle grid pattern */}
+        <div 
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '40px 40px'
+          }}
+        />
         
-        {/* Subtle window light effect */}
-        <div className="absolute top-0 right-0 w-1/3 h-1/2 bg-gradient-to-bl from-white/40 to-transparent blur-3xl"></div>
-        
-        <div className="max-w-7xl mx-auto text-gray-900 relative z-10">
+        <div className="max-w-7xl mx-auto text-stone-100 relative z-10">
           
           {/* Section Title */}
           <div className="text-center mb-16">
-            <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-gray-800"
+            <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-white"
                 style={{
                   fontFamily: '"natom-pro", sans-serif',
                   fontWeight: 700,
@@ -53,7 +52,7 @@ export default function Products() {
                 }}>
               Our Products {/* EDIT: Change this title */}
             </h2>
-            <p className="text-lg sm:text-xl md:text-2xl text-gray-700 max-w-4xl mx-auto">
+            <p className="text-lg sm:text-xl md:text-2xl text-neutral-300 max-w-4xl mx-auto">
               Your tagline or brief introduction here {/* EDIT: Add your tagline */}
             </p>
           </div>
@@ -62,16 +61,16 @@ export default function Products() {
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center mb-20">
             {/* Text Content */}
             <div className="space-y-4">
-              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-gray-800"
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-white"
                   style={{ fontFamily: '"natom-pro", sans-serif' }}>
                 Section Title 1 {/* EDIT: First section title */}
               </h3>
-              <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl text-neutral-300 leading-relaxed">
                 Your first paragraph goes here. Describe your product features, benefits, or 
                 unique selling points. This is where you tell your product story.
                 {/* EDIT: Replace with your content */}
               </p>
-              <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl text-neutral-300 leading-relaxed">
                 Add a second paragraph to expand on your ideas. Explain what makes your 
                 products unique and why customers should choose you.
                 {/* EDIT: Replace with your content */}
@@ -79,7 +78,7 @@ export default function Products() {
             </div>
             
             {/* Image Placeholder */}
-            <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden bg-white/50 backdrop-blur-sm border border-gray-300 shadow-lg">
+            <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden bg-neutral-600/50 backdrop-blur-sm border border-neutral-500 shadow-lg">
               {/* EDIT: Replace with your image */}
               <img 
                 src="/StruXturelogowords-removebg-preview.png" 
@@ -89,7 +88,7 @@ export default function Products() {
               />
               {/* Or use this placeholder if you don't have an image yet:
               <div className="flex items-center justify-center h-full">
-                <p className="text-gray-400 text-lg">Your Image Here</p>
+                <p className="text-neutral-400 text-lg">Your Image Here</p>
               </div>
               */}
             </div>
@@ -98,18 +97,18 @@ export default function Products() {
           {/* Content Block 2: Video/Media Section */}
           <div className="mb-20">
             <div className="text-center mb-8">
-              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-gray-800"
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-white"
                   style={{ fontFamily: '"natom-pro", sans-serif' }}>
                 Section Title 2 {/* EDIT: Second section title */}
               </h3>
-              <p className="text-base sm:text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
+              <p className="text-base sm:text-lg md:text-xl text-neutral-300 max-w-3xl mx-auto">
                 Introduce your video or media content here. Explain what viewers will learn or see.
                 {/* EDIT: Replace with your content */}
               </p>
             </div>
             
             {/* Video Placeholder */}
-            <div className="relative w-full max-w-5xl mx-auto h-64 md:h-96 lg:h-[500px] rounded-lg overflow-hidden bg-white/50 backdrop-blur-sm border border-gray-300 shadow-lg">
+            <div className="relative w-full max-w-5xl mx-auto h-64 md:h-96 lg:h-[500px] rounded-lg overflow-hidden bg-neutral-600/50 backdrop-blur-sm border border-neutral-500 shadow-lg">
               {/* EDIT: Replace with your video */}
               <video 
                 className="w-full h-full object-cover"
@@ -121,7 +120,7 @@ export default function Products() {
               </video>
               {/* Or use this placeholder:
               <div className="flex items-center justify-center h-full">
-                <p className="text-gray-400 text-lg">Your Video Here (.mp4, .webm)</p>
+                <p className="text-neutral-400 text-lg">Your Video Here (.mp4, .webm)</p>
               </div>
               */}
             </div>
@@ -130,7 +129,7 @@ export default function Products() {
           {/* Content Block 3: Image + Text (Reversed) */}
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center mb-20">
             {/* Image Placeholder */}
-            <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden bg-white/50 backdrop-blur-sm border border-gray-300 shadow-lg md:order-1">
+            <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden bg-neutral-600/50 backdrop-blur-sm border border-neutral-500 shadow-lg md:order-1">
               {/* EDIT: Replace with your image */}
               <img 
                 src="/struxturelogo.png" 
@@ -140,23 +139,23 @@ export default function Products() {
               />
               {/* Or use placeholder:
               <div className="flex items-center justify-center h-full">
-                <p className="text-gray-400 text-lg">Your Image Here</p>
+                <p className="text-neutral-400 text-lg">Your Image Here</p>
               </div>
               */}
             </div>
             
             {/* Text Content */}
             <div className="space-y-4 md:order-2">
-              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-gray-800"
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-white"
                   style={{ fontFamily: '"natom-pro", sans-serif' }}>
                 Section Title 3 {/* EDIT: Third section title */}
               </h3>
-              <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl text-neutral-300 leading-relaxed">
                 Another paragraph for your content. You can discuss product features, 
                 integrations, or customer success stories here.
                 {/* EDIT: Replace with your content */}
               </p>
-              <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl text-neutral-300 leading-relaxed">
                 Continue building your product narrative. Each block helps showcase 
                 different aspects of your offerings.
                 {/* EDIT: Replace with your content */}
@@ -165,8 +164,8 @@ export default function Products() {
           </div>
 
           {/* Content Block 4: Full-Width Image with Overlay Text */}
-          <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden mb-20 shadow-lg border border-gray-300">
-            <div className="absolute inset-0 bg-gradient-to-r from-white/90 to-transparent z-10"></div>
+          <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden mb-20 shadow-lg border border-neutral-500">
+            <div className="absolute inset-0 bg-gradient-to-r from-neutral-800/90 to-transparent z-10"></div>
             {/* EDIT: Replace with your image */}
             <img 
               src="/StruXturelogowords-removebg-preview.png" 
@@ -181,11 +180,11 @@ export default function Products() {
             {/* Overlay Text */}
             <div className="absolute inset-0 z-20 flex items-center justify-start px-8 md:px-16">
               <div className="max-w-2xl">
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-gray-800"
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-white"
                     style={{ fontFamily: '"natom-pro", sans-serif' }}>
                   Overlay Title {/* EDIT: Overlay section title */}
                 </h3>
-                <p className="text-base sm:text-lg md:text-xl text-gray-700">
+                <p className="text-base sm:text-lg md:text-xl text-neutral-300">
                   Text overlaid on image for dramatic effect. Perfect for quotes or key messages.
                   {/* EDIT: Replace with your content */}
                 </p>
@@ -196,7 +195,7 @@ export default function Products() {
           {/* Content Block 5: Three Column Grid */}
           <div className="mb-20">
             <div className="text-center mb-12">
-              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-gray-800"
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-white"
                   style={{ fontFamily: '"natom-pro", sans-serif' }}>
                 Section Title 4 {/* EDIT: Fourth section title */}
               </h3>
@@ -204,8 +203,8 @@ export default function Products() {
             
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {/* Column 1 */}
-              <div className="bg-white/60 backdrop-blur-sm border border-gray-300 rounded-lg p-6 hover:bg-white/80 hover:shadow-lg transition-all">
-                <div className="w-full h-48 mb-4 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
+              <div className="bg-neutral-600/60 backdrop-blur-sm border border-neutral-500 rounded-lg p-6 hover:bg-neutral-600/80 hover:shadow-lg transition-all">
+                <div className="w-full h-48 mb-4 rounded-lg overflow-hidden bg-neutral-500 border border-neutral-400">
                   {/* EDIT: Add your image */}
                   <img 
                     src="/struxturelogo.png" 
@@ -213,38 +212,38 @@ export default function Products() {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <h4 className="text-xl font-bold mb-3 text-gray-800">Product Feature 1</h4>
-                <p className="text-base text-gray-700">
+                <h4 className="text-xl font-bold mb-3 text-white">Product Feature 1</h4>
+                <p className="text-base text-neutral-300">
                   Brief description of this product feature or benefit. Keep it concise.
                   {/* EDIT: Replace with your content */}
                 </p>
               </div>
               
               {/* Column 2 */}
-              <div className="bg-white/60 backdrop-blur-sm border border-gray-300 rounded-lg p-6 hover:bg-white/80 hover:shadow-lg transition-all">
-                <div className="w-full h-48 mb-4 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
+              <div className="bg-neutral-600/60 backdrop-blur-sm border border-neutral-500 rounded-lg p-6 hover:bg-neutral-600/80 hover:shadow-lg transition-all">
+                <div className="w-full h-48 mb-4 rounded-lg overflow-hidden bg-neutral-500 border border-neutral-400">
                   {/* EDIT: Add your image */}
                   <div className="flex items-center justify-center h-full">
-                    <p className="text-gray-400">Your Image Here</p>
+                    <p className="text-neutral-400">Your Image Here</p>
                   </div>
                 </div>
-                <h4 className="text-xl font-bold mb-3 text-gray-800">Product Feature 2</h4>
-                <p className="text-base text-gray-700">
+                <h4 className="text-xl font-bold mb-3 text-white">Product Feature 2</h4>
+                <p className="text-base text-neutral-300">
                   Brief description of this product feature or benefit. Keep it concise.
                   {/* EDIT: Replace with your content */}
                 </p>
               </div>
               
               {/* Column 3 */}
-              <div className="bg-white/60 backdrop-blur-sm border border-gray-300 rounded-lg p-6 hover:bg-white/80 hover:shadow-lg transition-all">
-                <div className="w-full h-48 mb-4 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
+              <div className="bg-neutral-600/60 backdrop-blur-sm border border-neutral-500 rounded-lg p-6 hover:bg-neutral-600/80 hover:shadow-lg transition-all">
+                <div className="w-full h-48 mb-4 rounded-lg overflow-hidden bg-neutral-500 border border-neutral-400">
                   {/* EDIT: Add your image */}
                   <div className="flex items-center justify-center h-full">
-                    <p className="text-gray-400">Your Image Here</p>
+                    <p className="text-neutral-400">Your Image Here</p>
                   </div>
                 </div>
-                <h4 className="text-xl font-bold mb-3 text-gray-800">Product Feature 3</h4>
-                <p className="text-base text-gray-700">
+                <h4 className="text-xl font-bold mb-3 text-white">Product Feature 3</h4>
+                <p className="text-base text-neutral-300">
                   Brief description of this product feature or benefit. Keep it concise.
                   {/* EDIT: Replace with your content */}
                 </p>
@@ -254,11 +253,11 @@ export default function Products() {
 
           {/* Final Call-to-Action */}
           <div className="text-center py-16">
-            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 text-gray-800"
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 text-white"
                 style={{ fontFamily: '"natom-pro", sans-serif' }}>
               Ready to Try Our Products? {/* EDIT: CTA title */}
             </h3>
-            <p className="text-lg sm:text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl text-neutral-300 mb-8 max-w-2xl mx-auto">
               Final message or call-to-action. Encourage visitors to take the next step.
               {/* EDIT: Replace with your content */}
             </p>
