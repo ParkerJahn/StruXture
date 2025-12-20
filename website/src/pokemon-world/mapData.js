@@ -86,22 +86,22 @@ export const DOOR_ACTIONS = {
   '6,1': {
     name: 'Products Page',
     description: 'Explore our product showcase',
-    url: '/products',
+    url: '/products/',
   },
   '15,3': {
     name: 'Get Started',
     description: 'Learn how to get started with StruXture',
-    url: '/get-started',
+    url: '/get-started/',
   },
   '2,4': {
     name: 'Team Page',
     description: 'Meet the StruXture team',
-    url: '/team',
+    url: '/team/',
   },
   '15,6': {
     name: 'About Us',
     description: 'Learn more about StruXture',
-    url: '/about',
+    url: '/about/',
   },
   '2,7': {
     name: 'Home',

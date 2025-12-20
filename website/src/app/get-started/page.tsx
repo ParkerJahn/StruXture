@@ -169,7 +169,7 @@ export default function GetStarted() {
           <h1 
             className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 md:mb-8 drop-shadow-2xl"
             style={{
-              fontFamily: '"natom-pro", sans-serif',
+              fontFamily: 'var(--font-space-grotesk), sans-serif',
               fontWeight: 700,
               fontStyle: 'normal'
             }}
@@ -188,7 +188,7 @@ export default function GetStarted() {
           <h2 
             className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-8 sm:mb-12 text-center"
             style={{
-              fontFamily: '"natom-pro", sans-serif',
+              fontFamily: 'var(--font-space-grotesk), sans-serif',
               fontWeight: 700
             }}
           >
@@ -228,7 +228,7 @@ export default function GetStarted() {
             <h2 
               className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 sm:mb-6 text-center"
               style={{
-                fontFamily: '"natom-pro", sans-serif',
+                fontFamily: 'var(--font-space-grotesk), sans-serif',
                 fontWeight: 700
               }}
             >
@@ -375,7 +375,7 @@ export default function GetStarted() {
             <h2 
               className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-6"
               style={{
-                fontFamily: '"natom-pro", sans-serif',
+                fontFamily: 'var(--font-space-grotesk), sans-serif',
                 fontWeight: 700
               }}
             >

@@ -87,13 +87,13 @@ export default function Home() {
       <div className="relative z-50 pointer-events-auto">
         {/* Hero Section */}
         <section className="h-[100vh] flex items-center justify-center px-4 sm:px-6 md:px-8 bg-gradient-to-b from-neutral-800/80 via-neutral-900/70 to-black/30 relative z-50">
-          <div className="text-center text-white max-w-5xl relative z-50 w-full">
+          <div className="text-white max-w-5xl relative z-50 w-full">
             <TextType
-              text="Build Structured, Scalable Digital Solutions That Drive Growth"
+              text={`We Build.\nYou Scale.\nTogether the future is yours..`}
               as="h1"
-              className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-6 px-2"
+              className="text-left text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-6 px-2"
               style={{
-                fontFamily: '"natom-pro", sans-serif',
+                fontFamily: 'var(--font-space-grotesk), sans-serif',
                 fontWeight: 700,
                 fontStyle: 'normal'
               }}
@@ -104,14 +104,14 @@ export default function Home() {
               initialDelay={500}
               startOnVisible={true}
             />
-            <p className="text-base xs:text-lg sm:text-xl md:text-2xl opacity-90 mb-8 md:mb-12 px-2 max-w-4xl mx-auto">
-              Custom software, AI automation, and digital infrastructure designed for performance, security, and long-term impact.
+            <p className="text-center text-base xs:text-lg sm:text-xl md:text-2xl opacity-90 mb-8 md:mb-12 px-2 max-w-4xl mx-auto">
+              Why wait for others to build your dream projects. Lets turn that dream into reality today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-2">
-              <Link href="/get-started" className="px-8 py-4 bg-white text-black hover:bg-white/90 rounded-lg text-lg font-semibold transition-all hover:scale-105 w-full sm:w-auto text-center">
+              <Link href="/get-started/" className="px-8 py-4 bg-white text-black hover:bg-white/90 rounded-lg text-lg font-semibold transition-all hover:scale-105 w-full sm:w-auto text-center">
                 Start a Project
               </Link>
-              <Link href="/products" className="px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-lg font-semibold transition-all hover:scale-105 w-full sm:w-auto text-center">
+              <Link href="/products/" className="px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-lg font-semibold transition-all hover:scale-105 w-full sm:w-auto text-center">
                 View Our Services
               </Link>
             </div>
@@ -122,7 +122,7 @@ export default function Home() {
         <section className="h-[100vh] relative">
           <div className="sticky top-0 h-screen">
             <MultiGlobes />
-          </div>
+          </div>  
         </section>
 
         {/* Trust / Positioning Section */}
@@ -133,7 +133,7 @@ export default function Home() {
               as="h2"
               className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold mb-6"
               style={{
-                fontFamily: '"natom-pro", sans-serif',
+                fontFamily: 'var(--font-space-grotesk), sans-serif',
                 fontWeight: 700,
                 fontStyle: 'normal'
               }}
@@ -161,7 +161,7 @@ export default function Home() {
                 as="h2"
                 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold mb-6"
                   style={{
-                    fontFamily: '"natom-pro", sans-serif',
+                    fontFamily: 'var(--font-space-grotesk), sans-serif',
                     fontWeight: 700,
                     fontStyle: 'normal'
                 }}
@@ -179,7 +179,7 @@ export default function Home() {
               {/* Service 1 */}
               <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-8 hover:bg-white/10 transition-all">
                 <h3 className="text-2xl sm:text-3xl font-bold mb-4"
-                    style={{ fontFamily: '"natom-pro", sans-serif' }}>
+                    style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>
                   Custom SaaS Development
                 </h3>
                 <p className="text-base sm:text-lg opacity-90 leading-relaxed">
@@ -190,7 +190,7 @@ export default function Home() {
               {/* Service 2 */}
               <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-8 hover:bg-white/10 transition-all">
                 <h3 className="text-2xl sm:text-3xl font-bold mb-4"
-                    style={{ fontFamily: '"natom-pro", sans-serif' }}>
+                    style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>
                   AI Automation & Integration
                 </h3>
                 <p className="text-base sm:text-lg opacity-90 leading-relaxed">
@@ -201,7 +201,7 @@ export default function Home() {
               {/* Service 3 */}
               <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-8 hover:bg-white/10 transition-all">
                 <h3 className="text-2xl sm:text-3xl font-bold mb-4"
-                    style={{ fontFamily: '"natom-pro", sans-serif' }}>
+                    style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>
                   Custom CRM & Workflow Systems
                 </h3>
                 <p className="text-base sm:text-lg opacity-90 leading-relaxed">
@@ -212,7 +212,7 @@ export default function Home() {
               {/* Service 4 */}
               <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-8 hover:bg-white/10 transition-all">
                 <h3 className="text-2xl sm:text-3xl font-bold mb-4"
-                    style={{ fontFamily: '"natom-pro", sans-serif' }}>
+                    style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>
                   Websites & Landing Pages
                 </h3>
                 <p className="text-base sm:text-lg opacity-90 leading-relaxed">
@@ -229,7 +229,7 @@ export default function Home() {
                   as="h2"
                   className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold mb-6"
                   style={{
-                    fontFamily: '"natom-pro", sans-serif',
+                    fontFamily: 'var(--font-space-grotesk), sans-serif',
                     fontWeight: 700,
                     fontStyle: 'normal'
                   }}
@@ -250,7 +250,7 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="text-2xl sm:text-3xl font-bold mb-3"
-                    style={{ fontFamily: '"natom-pro", sans-serif' }}>
+                    style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>
                       Understand
                 </h3>
                     <p className="text-base sm:text-lg opacity-90 leading-relaxed">
@@ -266,7 +266,7 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="text-2xl sm:text-3xl font-bold mb-3"
-                        style={{ fontFamily: '"natom-pro", sans-serif' }}>
+                        style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>
                       Design & Build
                     </h3>
                     <p className="text-base sm:text-lg opacity-90 leading-relaxed">
@@ -282,7 +282,7 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="text-2xl sm:text-3xl font-bold mb-3"
-                      style={{ fontFamily: '"natom-pro", sans-serif' }}>
+                      style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>
                       Deploy & Scale
                   </h3>
                     <p className="text-base sm:text-lg opacity-90 leading-relaxed">
@@ -301,7 +301,7 @@ export default function Home() {
                   as="h2"
                   className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold mb-6"
                   style={{
-                    fontFamily: '"natom-pro", sans-serif',
+                    fontFamily: 'var(--font-space-grotesk), sans-serif',
                     fontWeight: 700,
                     fontStyle: 'normal'
                   }}
@@ -351,7 +351,7 @@ export default function Home() {
                 text="Let's Build Something That Lasts"
                 as="h3"
                 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6"
-                style={{ fontFamily: '"natom-pro", sans-serif' }}
+                style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}
                 typingSpeed={50}
                 showCursor={true}
                 cursorCharacter="|"
@@ -362,7 +362,7 @@ export default function Home() {
               <p className="text-lg sm:text-xl opacity-90 mb-8 max-w-3xl mx-auto">
                 Whether you&apos;re launching a new product or improving existing systems, StruXture Digital Solutions is ready to help you build with confidence.
               </p>
-              <Link href="/get-started" className="inline-block px-8 py-4 bg-white text-black hover:bg-white/90 rounded-lg text-lg font-semibold transition-all hover:scale-105">
+              <Link href="/get-started/" className="inline-block px-8 py-4 bg-white text-black hover:bg-white/90 rounded-lg text-lg font-semibold transition-all hover:scale-105">
                 Get in Touch
               </Link>
               <p className="text-sm opacity-60 mt-8">

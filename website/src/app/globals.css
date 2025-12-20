@@ -13,6 +13,11 @@
   font-display: swap;
 }
 
+/* Space Grotesk utility class for titles */
+.font-title {
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
 * {
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;

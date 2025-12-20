@@ -172,7 +172,7 @@ export default function Team() {
           <h1 
             className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 md:mb-8 drop-shadow-2xl"
             style={{
-              fontFamily: '"natom-pro", sans-serif',
+              fontFamily: 'var(--font-space-grotesk), sans-serif',
               fontWeight: 700,
               fontStyle: 'normal'
             }}
@@ -196,7 +196,7 @@ export default function Team() {
             <h2 
               className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4"
             style={{
-              fontFamily: '"natom-pro", sans-serif',
+              fontFamily: 'var(--font-space-grotesk), sans-serif',
                 fontWeight: 700,
                 fontStyle: 'normal'
             }}
@@ -394,7 +394,7 @@ export default function Team() {
                   disabled={isSubmitting}
                   className="w-full py-4 px-6 rounded-lg font-semibold text-base sm:text-lg bg-white text-black hover:bg-white/90 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-white/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   style={{
-                    fontFamily: '"natom-pro", sans-serif'
+                    fontFamily: 'var(--font-space-grotesk), sans-serif'
                   }}
                 >
                   {isSubmitting ? 'Submitting...' : 'Submit Application'}
@@ -414,7 +414,7 @@ export default function Team() {
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900/90 via-slate-900/50 to-transparent p-8">
                 <h3 
                   className="text-2xl sm:text-3xl font-bold text-white mb-2"
-                  style={{ fontFamily: '"natom-pro", sans-serif' }}
+                  style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}
                 >
                   Join Our Team
                 </h3>
