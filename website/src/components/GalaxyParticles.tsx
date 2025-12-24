@@ -5,6 +5,12 @@ import { Renderer, Camera, Geometry, Program, Mesh } from 'ogl';
 interface GalaxyParticlesProps {
   particleCount?: number;
   speed?: number;
+  scrollRotation?: boolean;
+  scrollRotationSpeed?: number;
+  scrollZoom?: boolean;
+  scrollZoomAmount?: number; // How much closer to move (positive = toward viewer)
+  scrollZoomDuration?: number; // Pixels of scroll to complete zoom
+  scrollStartOffset?: number; // Pixels of scroll before effects begin
   className?: string;
 }
 
@@ -85,9 +91,32 @@ const fragment = /* glsl */ `
 const GalaxyParticles: React.FC<GalaxyParticlesProps> = ({
   particleCount = 3000,
   speed = 0.1,
+  scrollRotation = false,
+  scrollRotationSpeed = 0.001,
+  scrollZoom = false,
+  scrollZoomAmount = 8,
+  scrollZoomDuration = 800,
+  scrollStartOffset = 0,
   className
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollYRef = useRef(0);
+
+  // Track scroll position
+  useEffect(() => {
+    if (!scrollRotation && !scrollZoom) return;
+
+    const handleScroll = () => {
+      scrollYRef.current = window.scrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Initialize
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [scrollRotation, scrollZoom]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -216,9 +245,28 @@ const GalaxyParticles: React.FC<GalaxyParticlesProps> = ({
 
       program.uniforms.uTime.value = elapsed * 0.001;
 
-      // Slowly rotate the galaxy
-      particles.rotation.y = elapsed * 0.0001;
+      // Slowly rotate the galaxy (time-based)
+      let yRotation = elapsed * 0.0001;
+      
+      // Calculate effective scroll (after offset)
+      const effectiveScroll = Math.max(0, scrollYRef.current - scrollStartOffset);
+      
+      // Add scroll-based rotation if enabled
+      if (scrollRotation) {
+        yRotation += effectiveScroll * scrollRotationSpeed;
+      }
+      
+      particles.rotation.y = yRotation;
       particles.rotation.x = Math.sin(elapsed * 0.00005) * 0.2;
+
+      // Apply scroll-based zoom (come toward viewer)
+      if (scrollZoom) {
+        const scrollProgress = Math.min(effectiveScroll / scrollZoomDuration, 1);
+        // Ease out cubic for smooth deceleration
+        const easedProgress = 1 - Math.pow(1 - scrollProgress, 3);
+        // Start at 15, move closer by scrollZoomAmount
+        camera.position.z = 15 - (scrollZoomAmount * easedProgress);
+      }
 
       renderer.render({ scene: particles, camera });
     };
@@ -232,7 +280,7 @@ const GalaxyParticles: React.FC<GalaxyParticlesProps> = ({
         containerRef.current.removeChild(gl.canvas);
       }
     };
-  }, [particleCount, speed]);
+  }, [particleCount, speed, scrollRotation, scrollRotationSpeed, scrollZoom, scrollZoomAmount, scrollZoomDuration, scrollStartOffset]);
 
   return <div ref={containerRef} className={`relative w-full h-full ${className}`} />;
 };

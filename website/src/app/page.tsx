@@ -70,7 +70,16 @@ export default function Home() {
       
       {/* Floating Galaxy Background */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <GalaxyParticles particleCount={3000} speed={0.1} />
+        <GalaxyParticles 
+          particleCount={3000} 
+          speed={0.1} 
+          scrollRotation={true}
+          scrollRotationSpeed={0.0003}
+          scrollZoom={true}
+          scrollZoomAmount={7}
+          scrollZoomDuration={2500}
+          scrollStartOffset={500}
+        />
       </div>
       
       {/* Original slow scrolling globes - start after multi-globe section */}

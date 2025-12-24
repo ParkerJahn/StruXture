@@ -162,30 +162,7 @@ const TileWorld = () => {
         }
       `}</style>
 
-      <div className="relative z-50 flex flex-col items-center justify-start min-h-screen px-4 pb-6 overflow-x-hidden" style={{ paddingTop: '160px' }}>
-        {/* Title Section */}
-        <div className="mb-4 sm:mb-6 text-center bg-white rounded-xl py-4 px-6 shadow-lg border border-gray-300">
-          <h1 
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 sm:mb-3"
-            style={{
-              fontFamily: '"natom-pro", sans-serif',
-              fontWeight: 700,
-              textShadow: '2px 2px 4px rgba(0,0,0,0.1)'
-            }}
-          >
-            EXPLORE OUR PRODUCTS
-          </h1>
-          <p className="text-gray-800 text-xs sm:text-sm font-semibold" style={{ fontFamily: 'monospace' }}>
-            <span className="hidden md:inline">Use arrow keys or WASD to move • </span>
-            <span className="md:hidden">Use arrow buttons below to move • </span>
-            Walk into houses to discover products
-          </p>
-          {showGrid && (
-            <div className="mt-1 px-3 py-1 bg-yellow-100 border border-yellow-400 rounded text-xs text-yellow-900 font-mono inline-block">
-              DEBUG MODE: Grid coordinates visible
-            </div>
-          )}
-        </div>
+      <div className="relative z-50 flex flex-col items-center justify-start min-h-screen px-4 pb-6 overflow-x-hidden" style={{ paddingTop: '100px' }}>
 
         {/* CRT TV Frame Container */}
         <div className="relative w-full mx-auto flex-1 flex items-center justify-center overflow-visible px-2 sm:px-4 md:px-0" style={{ maxHeight: 'calc(100vh - 180px)' }}>

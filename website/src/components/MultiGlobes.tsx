@@ -106,17 +106,20 @@ export default function MultiGlobes() {
     window.addEventListener('resize', checkMobile);
 
     const handleScroll = () => {
-      const viewportHeight = window.innerHeight;
-      // Multi-globe section starts at 100vh (after intro section)
-      const sectionStartScroll = viewportHeight * 1;
-      const sectionHeight = viewportHeight * 4; // 400vh section
-      
       const scrollY = window.scrollY;
-      const scrollIntoSection = scrollY - sectionStartScroll;
+      // Start offset - wait before effects begin (synced with galaxy)
+      const startOffset = 500;
+      // Exit duration in pixels - synced with galaxy zoom
+      const exitDuration = 2500;
       
-      // Calculate progress: 0 at start, 1 at end of section
-      const progress = Math.max(0, Math.min(1, scrollIntoSection / sectionHeight));
-      setScrollProgress(progress);
+      // Calculate effective scroll (after offset)
+      const effectiveScroll = Math.max(0, scrollY - startOffset);
+      
+      // Calculate progress: 0 at start, 1 when scrolled exitDuration after offset
+      const progress = Math.min(effectiveScroll / exitDuration, 1);
+      // Ease out cubic for smooth deceleration (matches galaxy zoom)
+      const easedProgress = 1 - Math.pow(1 - progress, 3);
+      setScrollProgress(easedProgress);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });

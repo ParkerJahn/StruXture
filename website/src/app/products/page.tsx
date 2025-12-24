@@ -23,22 +23,10 @@ export default function Products() {
     <div className="min-h-screen w-screen bg-black relative overflow-x-hidden">
       <Header />
       
-      {/* Hero Section with Background Image */}
-      <section className="relative w-full h-[70vh] md:h-[80vh] overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0">
-          <img 
-            src="/Productsbackground.png" 
-            alt="StruXture Products - Innovative Digital Solutions"
-            className="w-full h-full object-cover"
-            loading="eager"
-          />
-          {/* Overlay for better text readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-blue-900/20 to-slate-900"></div>
-        </div>
-
+      {/* Hero Section */}
+      <section className="relative w-full pt-24 pb-2 md:pt-28 md:pb-4 bg-gradient-to-b from-black via-slate-900 to-slate-900">
         {/* Hero Content */}
-        <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 text-center">
+        <div className="relative z-10 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 text-center">
           <h1 
             className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 md:mb-8 drop-shadow-2xl"
             style={{
@@ -49,30 +37,14 @@ export default function Products() {
           >
             Our Products
           </h1>
-          <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white max-w-4xl mx-auto px-4 drop-shadow-lg">
+          <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/80 max-w-4xl mx-auto px-4 drop-shadow-lg">
             Innovative digital solutions designed to transform your business
           </p>
         </div>
       </section>
 
       {/* Interactive Game Section */}
-      <section className="relative bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h2 
-              className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4"
-              style={{
-                fontFamily: 'var(--font-space-grotesk), sans-serif',
-                fontWeight: 700
-              }}
-            >
-              Explore Our World
-            </h2>
-            <p className="text-base sm:text-lg text-white/70 max-w-2xl mx-auto">
-              Walk into houses to discover our products and services
-            </p>
-          </div>
-        </div>
+      <section className="relative bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 pt-0 pb-16 md:pt-0 md:pb-24">
         <TileWorld />
       </section>
       
